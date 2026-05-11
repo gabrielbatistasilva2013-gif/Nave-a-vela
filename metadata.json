@@ -1,0 +1,6 @@
+{
+  "name": "Detector de Fake News",
+  "description": "Um site educativo sobre como evitar Fake News, com um quiz e um detector movido a IA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
