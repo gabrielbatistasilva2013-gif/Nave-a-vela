@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, Send, Loader2, AlertTriangle, ShieldCheck, CheckCircle2, X } from 'lucide-react';
+import { Upload, Send, Loader2, AlertTriangle, ShieldCheck, CheckCircle2, X, RefreshCw } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { analyzeFakeNews } from '../services/gemini';
 import { cn } from '../lib/utils';
@@ -138,15 +138,19 @@ export default function FakeNewsDetector() {
         <div className="absolute top-0 right-0 p-4 opacity-20">
           <ShieldCheck className="w-32 h-32 text-white" strokeWidth={0.5} />
         </div>
-        <div className="text-left mb-10 relative z-10 border-b border-white/10 pb-8">
-          <div className="inline-block bg-white text-black px-2 py-1 text-[10px] font-bold uppercase tracking-widest mb-4">Motor Inteligente</div>
-          <h2 className="text-3xl font-serif text-white mb-3">
-            Analisador de Casos
-          </h2>
-          <p className="text-sm text-slate-400 max-w-xl leading-relaxed">
-            Plataforma de IA com cruzamento de dados, linguagem natural e análise metadados de imagem. Execute inferências enviando textos suspeitos ou imagens anexas.
-          </p>
+      <div className="text-left mb-10 relative z-10 border-b border-white/10 pb-8">
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="inline-block bg-white text-black px-2 py-1 text-[10px] font-bold uppercase tracking-widest mb-4">Motor Inteligente</div>
+            <h2 className="text-3xl font-serif text-white mb-3">
+              Analisador de Casos
+            </h2>
+            <p className="text-sm text-slate-400 max-w-xl leading-relaxed">
+              Plataforma com cruzamento de dados, linguagem natural e análise metadados de imagem. Execute inferências enviando textos suspeitos ou imagens anexas.
+            </p>
+          </div>
         </div>
+      </div>
 
       <div className="relative z-10">
       <AnimatePresence>
@@ -256,14 +260,24 @@ export default function FakeNewsDetector() {
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between w-full mt-6">
-          <div className="text-[10px] text-slate-500 tracking-wider">
-            Análise segura • Comparativo em Lote Inteligente
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between w-full mt-6 border-t border-white/10 pt-6">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => { setText(''); setFiles([]); setPreviews([]); setResult(null); setError(null); }}
+              type="button"
+              className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-sm text-[10px] font-bold uppercase tracking-widest text-slate-300 transition-colors group"
+            >
+              <RefreshCw className="w-3 h-3 group-hover:rotate-180 transition-transform duration-500" />
+              Limpar tudo
+            </button>
+            <div className="text-[10px] text-slate-500 tracking-wider hidden md:block">
+              Análise segura • Comparativo inteligente
+            </div>
           </div>
           <button
             type="submit"
             disabled={loading || (!text.trim() && files.length === 0)}
-            className="flex items-center justify-center gap-2 px-8 py-3 bg-white text-black text-xs font-bold uppercase tracking-widest hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-3 bg-white text-black text-xs font-bold uppercase tracking-widest hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             {loading ? (
               <>
@@ -293,7 +307,7 @@ export default function FakeNewsDetector() {
             {getStatusIcon(result.status)}
             <div>
               <h3 className="text-lg font-serif italic mb-1">
-                Relatório de Análise da IA
+                Relatório de Análise
               </h3>
               <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">
                 {getStatusText(result.status)}

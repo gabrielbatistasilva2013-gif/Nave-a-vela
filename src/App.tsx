@@ -1,16 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EarthAnimation from './components/EarthAnimation';
 import FakeNewsDetector from './components/FakeNewsDetector';
 import Quiz from './components/Quiz';
+import TrainingManual from './components/TrainingManual';
 import { Search, Brain, BookOpen, AlertCircle, ArrowDown, ShieldCheck, CheckSquare, Globe, AlertTriangle, XCircle, TrendingDown, ArrowRight } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'motion/react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
+  const [activeSection, setActiveSection] = useState('inicio');
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const { scrollY } = useScroll();
-  const navOpacity = useTransform(scrollY, [0, 300], [0, 1]);
-  const navY = useTransform(scrollY, [0, 300], [-50, 0]);
+  
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setIsScrolled(latest > 50);
+    
+    if (activeTab === 'home') {
+      const impactosEl = document.getElementById('impactos');
+      if (impactosEl) {
+        const threshold = impactosEl.offsetTop - (typeof window !== 'undefined' ? window.innerHeight / 2 : 400);
+        if (latest >= threshold) {
+          setActiveSection('impactos');
+        } else {
+          setActiveSection('inicio');
+        }
+      }
+    }
+  });
+
+  const isNavTop = activeTab === 'detector';
+  const showNavText = !isScrolled;
+
+  useEffect(() => {
+    // Force start at top
+    window.scrollTo(0, 0);
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col relative w-full overflow-x-hidden font-sans bg-[#000000]">
@@ -19,41 +47,59 @@ export default function App() {
       <div className="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-screen pointer-events-none z-0"></div>
       
       {/* Floating Navigation */}
-      <motion.nav 
-        style={{ opacity: navOpacity, y: navY }}
-        className="fixed top-0 left-0 right-0 z-50 flex justify-center py-6 pointer-events-none"
-      >
-        <div className="bg-[#050505]/80 backdrop-blur-md border border-white/10 p-2 rounded-full flex gap-2 pointer-events-auto shadow-2xl">
+      <div className={`fixed inset-0 z-50 pointer-events-none flex transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isNavTop ? 'items-start justify-center pt-6' : 'max-md:items-end max-md:justify-center max-md:pb-6 md:items-center md:justify-end md:pr-8'}`}>
+        <div 
+          className={`bg-[#050505]/80 backdrop-blur-md border border-white/10 p-2 rounded-[2rem] flex pointer-events-auto shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isNavTop ? 'flex-row gap-2' : 'max-md:flex-row max-md:gap-2 md:flex-col md:gap-3'}`}
+        >
           <button
-            onClick={() => { setActiveTab('home'); window.scrollTo(0,0); }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all text-xs font-bold uppercase tracking-widest hover:bg-white/10 group ${activeTab === 'home' ? 'text-white' : 'text-slate-400'}`}
+            onClick={() => { setActiveTab('home'); setActiveSection('inicio'); window.scrollTo(0,0); }}
+            className={`flex items-center justify-center p-2 rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest group relative ${activeTab === 'home' && activeSection === 'inicio' ? 'text-cyan-50 bg-cyan-500/20 ring-1 ring-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.4)]' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+            title="Início"
           >
-            <Globe className="w-4 h-4 group-hover:text-cyan-400 transition-colors" />
-            <span className="hidden md:inline">Início</span>
+            {activeTab === 'home' && activeSection === 'inicio' && (
+              <span className="absolute inset-0 rounded-full animate-pulse bg-cyan-500/10 shadow-[0_0_15px_rgba(6,182,212,0.6)] mix-blend-screen pointer-events-none"></span>
+            )}
+            <Globe className={`w-5 h-5 shrink-0 transition-colors z-10 relative ${activeTab === 'home' && activeSection === 'inicio' ? 'text-cyan-400' : 'group-hover:text-cyan-400'}`} />
+            <span className={`overflow-hidden transition-all duration-500 whitespace-nowrap z-10 relative max-md:hidden ${showNavText ? 'max-w-[100px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}`}>Início</span>
           </button>
+          
           <button
-            onClick={() => { setActiveTab('home'); setTimeout(() => document.getElementById('impactos')?.scrollIntoView({ behavior: 'smooth' }), 50); }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all text-xs font-bold uppercase tracking-widest hover:bg-white/10 group text-slate-400 hover:text-white`}
+            onClick={() => { setActiveTab('home'); setActiveSection('impactos'); setTimeout(() => document.getElementById('impactos')?.scrollIntoView({ behavior: 'smooth' }), 50); }}
+            className={`flex items-center justify-center p-2 rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest group relative ${activeTab === 'home' && activeSection === 'impactos' ? 'text-red-50 bg-red-500/20 ring-1 ring-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.4)]' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+            title="Impactos"
           >
-            <AlertTriangle className="w-4 h-4 text-yellow-500 group-hover:text-red-500 transition-colors" />
-            <span className="hidden md:inline">Impactos</span>
+            {activeTab === 'home' && activeSection === 'impactos' && (
+              <span className="absolute inset-0 rounded-full animate-pulse bg-red-500/10 shadow-[0_0_15px_rgba(239,68,68,0.6)] mix-blend-screen pointer-events-none"></span>
+            )}
+            <AlertTriangle className={`w-5 h-5 shrink-0 transition-colors z-10 relative ${activeTab === 'home' && activeSection === 'impactos' ? 'text-red-400' : 'text-yellow-500 group-hover:text-red-500'}`} />
+            <span className={`overflow-hidden transition-all duration-500 whitespace-nowrap z-10 relative max-md:hidden ${showNavText ? 'max-w-[100px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}`}>Impactos</span>
           </button>
+          
           <button
             onClick={() => { setActiveTab('detector'); window.scrollTo(0,0); }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all text-xs font-bold uppercase tracking-widest hover:bg-white/10 group ${activeTab === 'detector' ? 'text-white' : 'text-slate-400'}`}
+            className={`flex items-center justify-center p-2 rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest group relative ${activeTab === 'detector' ? 'text-blue-50 bg-blue-500/20 ring-1 ring-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.4)]' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+            title="Detector"
           >
-            <ShieldCheck className="w-4 h-4 text-blue-500" />
-            <span className="hidden md:inline">Detector IA</span>
+            {activeTab === 'detector' && (
+              <span className="absolute inset-0 rounded-full animate-pulse bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.6)] mix-blend-screen pointer-events-none"></span>
+            )}
+            <ShieldCheck className={`w-5 h-5 shrink-0 transition-colors z-10 relative ${activeTab === 'detector' ? 'text-blue-400' : 'text-blue-500 group-hover:text-blue-400'}`} />
+            <span className={`overflow-hidden transition-all duration-500 whitespace-nowrap z-10 relative max-md:hidden ${showNavText ? 'max-w-[120px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}`}>Detector</span>
           </button>
+          
           <button
             onClick={() => { setActiveTab('quiz'); window.scrollTo(0,0); }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all text-xs font-bold uppercase tracking-widest hover:bg-white/10 group ${activeTab === 'quiz' ? 'text-white' : 'text-slate-400'}`}
+            className={`flex items-center justify-center p-2 rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest group relative ${activeTab === 'quiz' ? 'text-green-50 bg-green-500/20 ring-1 ring-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.4)]' : 'text-green-500 hover:bg-white/5 hover:text-green-400'}`}
+            title="Quiz"
           >
-            <CheckSquare className="w-4 h-4 group-hover:text-green-500 transition-colors" />
-            <span className="hidden md:inline">Quiz</span>
+             {activeTab === 'quiz' && (
+              <span className="absolute inset-0 rounded-full animate-pulse bg-green-500/10 shadow-[0_0_15px_rgba(34,197,94,0.6)] mix-blend-screen pointer-events-none" style={{ animationDuration: '2s' }}></span>
+            )}
+            <CheckSquare className={`w-5 h-5 shrink-0 transition-colors z-10 relative text-green-400 group-hover:text-green-300`} />
+            <span className={`overflow-hidden transition-all duration-500 whitespace-nowrap z-10 relative max-md:hidden ${showNavText ? 'max-w-[100px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}`}>Quiz</span>
           </button>
         </div>
-      </motion.nav>
+      </div>
 
       {/* Main Content Area */}
       <main className="flex-1 w-full relative z-10 flex flex-col items-center">
@@ -77,7 +123,7 @@ export default function App() {
                 transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white leading-tight max-w-4xl tracking-tight"
               >
-                A inteligência artificial na luta contra as <span className="text-red-500 italic block sm:inline mt-2 sm:mt-0">Fake News</span>
+                A luta contra as <span className="text-red-500 italic block sm:inline mt-2 sm:mt-0">Fake News</span>
               </motion.div>
 
               <motion.p
@@ -124,13 +170,13 @@ export default function App() {
                 >
                   <span>BREAKING: 73% DAS NOTÍCIAS COMPARTILHADAS ONTEM CONTINHAM INFORMAÇÕES NÃO VERIFICADAS</span>
                   <span className="w-1 h-1 bg-red-500 rounded-full"></span>
-                  <span>NOVA IA IDENTIFICA DEEPFAKES DE ÁUDIO COM 99% DE PRECISÃO</span>
+                  <span>NOVO SISTEMA IDENTIFICA DEEPFAKES DE ÁUDIO COM 99% DE PRECISÃO</span>
                   <span className="w-1 h-1 bg-cyan-500 rounded-full"></span>
                   <span>IMPACTO NAS ELEIÇÕES GLOBAIS: RELATÓRIO APONTA RISCO CRÍTICO E ALTA MANIPULAÇÃO SOCIAL</span>
                   <span className="w-1 h-1 bg-red-500 rounded-full"></span>
                   <span>BREAKING: 73% DAS NOTÍCIAS COMPARTILHADAS ONTEM CONTINHAM INFORMAÇÕES NÃO VERIFICADAS</span>
                   <span className="w-1 h-1 bg-cyan-500 rounded-full"></span>
-                  <span>NOVA IA IDENTIFICA DEEPFAKES DE ÁUDIO COM 99% DE PRECISÃO</span>
+                  <span>NOVO SISTEMA IDENTIFICA DEEPFAKES DE ÁUDIO COM 99% DE PRECISÃO</span>
                   <span className="w-1 h-1 bg-red-500 rounded-full"></span>
                   <span>IMPACTO NAS ELEIÇÕES GLOBAIS: RELATÓRIO APONTA RISCO CRÍTICO E ALTA MANIPULAÇÃO SOCIAL</span>
                 </motion.div>
@@ -204,6 +250,9 @@ export default function App() {
                 </div>
               </motion.div>
             </div>
+
+            {/* --- MANUAL DE TREINAMENTO --- */}
+            <TrainingManual />
 
             {/* --- ESTUDOS DE CASO / EXEMPLOS --- */}
             <div className="mt-24 pt-16 border-t border-white/10">
