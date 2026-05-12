@@ -16,6 +16,6 @@ export async function analyzeFakeNews(text: string, images: { base64: string, mi
     return data.analysis;
   } catch (error) {
     console.error('Error analyzing content:', error);
-    throw new Error('Falha ao conectar com a IA. Tente novamente mais tarde.');
+    throw new Error('Falha ao conectar com o sistema. Tente novamente mais tarde.');
   }
 }
