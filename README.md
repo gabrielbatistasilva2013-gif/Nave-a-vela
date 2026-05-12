@@ -7,26 +7,36 @@ Esta aplicação ajuda a conscientizar sobre os perigos reais das Fake News e fo
 - Node.js
 - Uma chave de API do Gemini (Google AI Studio)
 
-## Como executar localmente
+## Como baixar e executar no seu computador (Passo a passo fácil)
 
-1. Instale as dependências:
+**Passo 1: Baixar os arquivos (O famoso "Clone")**
+"Clonar" significa apenas copiar os arquivos do GitHub para o seu computador. Se não souber usar o Git, faça o seguinte:
+1. No topo desta página no GitHub, clique no botão verde escrito **"<> Code"**.
+2. No menu que abrir, clique em **"Download ZIP"**.
+3. Encontre o arquivo baixado no seu computador e extraia (descompacte) a pasta.
+
+**Passo 2: Abrir a pasta no terminal**
+Abra o programa de terminal do seu computador (como o Prompt de Comando no Windows) ou o terminal do seu editor de código (como o VS Code) e navegue até a pasta que você extraiu.
+
+**Passo 3: Instalar as dependências**
+No terminal, digite o seguinte comando e aperte Enter:
 ```bash
 npm install
 ```
 
-2. Configure a chave de API do Gemini:
-Crie um arquivo chamado `.env.local` na raiz do projeto (como o `.env.example`) e adicione sua chave:
+**Passo 4: Configurar a chave da Inteligência Artificial**
+1. Crie um arquivo chamado `.env.local` dentro da pasta do projeto.
+2. Abra esse arquivo no Bloco de Notas (ou VS Code) e coloque a sua chave do Gemini lá dentro, neste formato:
 ```env
 GEMINI_API_KEY=sua_chave_api_aqui
 ```
-*(Nota: O arquivo `.env.local` é ignorado pelo Git por segurança)*
 
-3. Inicie a aplicação:
+**Passo 5: Rodar o projeto!**
+No terminal, digite:
 ```bash
 npm run dev
 ```
-
-Abra o navegador no endereço indicado no terminal (normalmente http://localhost:3000 ou o porta gerada pelo Vite).
+Dê permissão caso o Windows peça, e abra o link que aparecer no terminal (geralmente será algo como `http://localhost:3000`).
 
 ## Tecnologias utilizadas
 - React + Vite
