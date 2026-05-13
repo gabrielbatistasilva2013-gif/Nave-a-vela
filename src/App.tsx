@@ -156,31 +156,7 @@ export default function App() {
                  </a>
               </motion.div>
 
-              {/* News Ticker */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 1 }}
-                className="absolute bottom-0 left-0 right-0 bg-[#050505]/80 backdrop-blur-md border-t border-white/10 overflow-hidden flex whitespace-nowrap py-3 font-mono text-[10px] uppercase text-cyan-400/80 tracking-widest"
-              >
-                <motion.div 
-                  className="flex gap-16 items-center"
-                  animate={{ x: ["0%", "-50%"] }}
-                  transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
-                >
-                  <span>BREAKING: 73% DAS NOTÍCIAS COMPARTILHADAS ONTEM CONTINHAM INFORMAÇÕES NÃO VERIFICADAS</span>
-                  <span className="w-1 h-1 bg-red-500 rounded-full"></span>
-                  <span>NOVO SISTEMA IDENTIFICA DEEPFAKES DE ÁUDIO COM 99% DE PRECISÃO</span>
-                  <span className="w-1 h-1 bg-cyan-500 rounded-full"></span>
-                  <span>IMPACTO NAS ELEIÇÕES GLOBAIS: RELATÓRIO APONTA RISCO CRÍTICO E ALTA MANIPULAÇÃO SOCIAL</span>
-                  <span className="w-1 h-1 bg-red-500 rounded-full"></span>
-                  <span>BREAKING: 73% DAS NOTÍCIAS COMPARTILHADAS ONTEM CONTINHAM INFORMAÇÕES NÃO VERIFICADAS</span>
-                  <span className="w-1 h-1 bg-cyan-500 rounded-full"></span>
-                  <span>NOVO SISTEMA IDENTIFICA DEEPFAKES DE ÁUDIO COM 99% DE PRECISÃO</span>
-                  <span className="w-1 h-1 bg-red-500 rounded-full"></span>
-                  <span>IMPACTO NAS ELEIÇÕES GLOBAIS: RELATÓRIO APONTA RISCO CRÍTICO E ALTA MANIPULAÇÃO SOCIAL</span>
-                </motion.div>
-              </motion.div>
+
             </section>
 
         {/* --- O QUE SÃO FAKE NEWS --- */}
