@@ -74,6 +74,6 @@ Após a tag, forneça o relatório detalhado em português com fontes.`;
     res.status(200).json({ analysis: response.text });
   } catch (error: any) {
     console.error('Error analyzing content via Vercel Edge/Serverless:', error);
-    res.status(500).json({ error: 'Falha ao conectar com o sistema de verificação.', details: error.message || String(error) });
+    res.status(500).json({ error: 'Deu erro ao se conectar ao servidor.', details: error.message || String(error) });
   }
 }
