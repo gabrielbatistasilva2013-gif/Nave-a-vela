@@ -1,8 +1,18 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { Crosshair, Activity, Globe2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Crosshair, Activity, Globe2, Loader2 } from 'lucide-react';
+
+const EARTH_TEX_URL = 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg';
 
 export default function EarthAnimation() {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = EARTH_TEX_URL;
+    img.onload = () => setImageLoaded(true);
+  }, []);
+
   return (
     <div className="relative w-72 h-72 md:w-96 md:h-96 lg:w-[450px] lg:h-[450px] mx-auto flex items-center justify-center pointer-events-none select-none">
       
@@ -53,14 +63,29 @@ export default function EarthAnimation() {
           `
         }}
       >
+        <AnimatePresence>
+          {!imageLoaded && (
+            <motion.div 
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a1526] z-50 pointer-events-none"
+            >
+              <Loader2 className="w-8 h-8 text-cyan-500 animate-spin mb-2" />
+              <span className="text-cyan-500 font-mono text-xs tracking-widest animate-pulse">CALIBRANDO SENSORES...</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Base Surface Texture (Earth Day) */}
         <motion.div 
           className="absolute inset-y-0 left-0 h-full w-[400%]"
           style={{
-            backgroundImage: "url('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')",
+            backgroundImage: `url('${EARTH_TEX_URL}')`,
             backgroundSize: "50% 100%",
             backgroundRepeat: "repeat-x",
-            filter: "contrast(1.3) saturate(1.2) brightness(1.2)"
+            filter: "contrast(1.3) saturate(1.2) brightness(1.2)",
+            opacity: imageLoaded ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out'
           }}
           animate={{ x: ["0%", "-50%"] }}
           transition={{ duration: 40, repeat: Infinity, ease: "linear" }}

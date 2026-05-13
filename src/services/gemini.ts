@@ -7,15 +7,23 @@ export async function analyzeFakeNews(text: string, images: { base64: string, mi
     });
 
     if (!response.ok) {
-      throw new Error('Falha ao conectar com o servidor.');
+      try {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Falha ao conectar com o servidor.');
+      } catch (e) {
+        if (e instanceof Error && e.message !== 'Unexpected end of JSON input') {
+          throw e; // throw the parsed error
+        }
+        throw new Error('Falha ao conectar com o servidor.');
+      }
     }
 
     const data = await response.json();
     if (data.error) throw new Error(data.error);
 
     return data.analysis;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error analyzing content:', error);
-    throw new Error('Falha ao conectar com o sistema. Tente novamente mais tarde.');
+    throw new Error(error.message || 'Falha ao conectar com o sistema. Tente novamente mais tarde.');
   }
 }
