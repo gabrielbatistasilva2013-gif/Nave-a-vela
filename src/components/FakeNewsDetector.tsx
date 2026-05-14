@@ -210,13 +210,29 @@ export default function FakeNewsDetector() {
         <div className="flex flex-col gap-6">
           <div className="flex-1 space-y-4">
             <label className="block text-xs uppercase tracking-widest font-bold text-slate-400">
-              Texto da Notícia ou URL
+              Texto da Notícia ou Link (URL)
             </label>
+            <input
+              type="url"
+              className="w-full p-4 mb-4 rounded-sm bg-transparent border border-white/20 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors text-sm"
+              placeholder="Cole o link (URL) da matéria ou postagem aqui (opcional)"
+              value={text.match(/^https?:\/\/[^\s]+$/) ? text : (text.includes('http') ? text.match(/https?:\/\/[^\s]+/)?.[0] || '' : '')}
+              onChange={(e) => {
+                const url = e.target.value;
+                setText(t => {
+                   const withoutUrl = t.replace(/https?:\/\/[^\s]+/, '').trim();
+                   return url ? `${url}\n\n${withoutUrl}` : withoutUrl;
+                });
+              }}
+            />
             <textarea
-              className="w-full h-40 p-4 rounded-sm bg-transparent border border-white/20 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors resize-none text-sm"
+              className="w-full h-32 p-4 rounded-sm bg-transparent border border-white/20 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors resize-none text-sm"
               placeholder="Cole o texto que você deseja analisar aqui..."
-              value={text}
-              onChange={(e) => setText(e.target.value)}
+              value={text.replace(/^https?:\/\/[^\s]+\s*/, '')}
+              onChange={(e) => {
+                 const urlStr = text.match(/^https?:\/\/[^\s]+/)?.[0] || '';
+                 setText(urlStr ? `${urlStr}\n\n${e.target.value}` : e.target.value);
+              }}
             />
           </div>
 

@@ -10,7 +10,12 @@ export async function analyzeFakeNews(text: string, images: { base64: string, mi
       let errorText = "Falha ao conectar com o servidor.";
       try {
          const errorData = await response.json();
-         errorText = errorData.error || errorData.details || errorText;
+         let errorMsg = errorData.error || errorData.details || errorText;
+         if (typeof errorMsg === 'string' && (errorMsg.includes('API key not valid') || errorMsg.includes('API_KEY_INVALID'))) {
+            errorText = "A chave da API do Gemini não é válida. Verifique as configurações (Settings) do AI Studio.";
+         } else {
+            errorText = errorMsg;
+         }
       } catch (e) {
          errorText = `Erro do servidor (${response.status}): ${response.statusText}`;
       }
