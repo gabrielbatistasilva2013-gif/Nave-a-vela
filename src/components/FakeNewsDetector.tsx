@@ -178,7 +178,7 @@ export default function FakeNewsDetector() {
       </AnimatePresence>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col gap-6">
           <div className="flex-1 space-y-4">
             <label className="block text-xs uppercase tracking-widest font-bold text-slate-400">
               Texto da Notícia ou URL
@@ -190,6 +190,10 @@ export default function FakeNewsDetector() {
               onChange={(e) => setText(e.target.value)}
             />
           </div>
+
+          <p className="text-[10px] text-slate-500 opacity-80 text-center max-w-sm mx-auto">
+            O detector pode cometer erros as vezes, as vezes é indicado consultar a notícia.
+          </p>
           
           <div className="flex-1 space-y-4">
             <label className="block text-xs uppercase tracking-widest font-bold text-slate-400 flex justify-between">

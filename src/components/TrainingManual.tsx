@@ -67,7 +67,7 @@ const levels = [
 ];
 
 export default function TrainingManual() {
-  const [openLevel, setOpenLevel] = useState<string | null>('easy');
+  const [openLevel, setOpenLevel] = useState<string | null>(null);
 
   return (
     <div className="w-full max-w-4xl mx-auto my-16 bg-[#050505] p-6 md:p-10 border border-white/10 rounded-sm">

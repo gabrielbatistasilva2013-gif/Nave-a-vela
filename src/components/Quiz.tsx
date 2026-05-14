@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
-import { Brain, Settings2, Play, RefreshCw, Layers } from 'lucide-react';
+import { Brain, Settings2, Play, RefreshCw, Layers, Loader2 } from 'lucide-react';
+import { generateQuizQuestions } from '../services/gemini';
 
 type Question = {
   id: number;
@@ -43,7 +44,7 @@ const ALL_QUESTIONS: Question[] = [
 ];
 
 export default function Quiz() {
-  const [gameState, setGameState] = useState<'menu' | 'playing' | 'result'>('menu');
+  const [gameState, setGameState] = useState<'menu' | 'loading' | 'playing' | 'result'>('menu');
   
   // Menu Options
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard' | 'impossible'>('medium');
@@ -56,25 +57,51 @@ export default function Quiz() {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [hasAnswered, setHasAnswered] = useState(false);
   
-  const startQuiz = () => {
-    let pool = ALL_QUESTIONS.filter(q => q.difficulty === difficulty);
-    pool.sort(() => Math.random() - 0.5);
+  const startQuiz = async () => {
+    setGameState('loading');
     
-    let targetPool: Question[] = [];
-    if (length !== 'infinite') {
-       for (let i = 0; i < length; i++) {
-         targetPool.push(pool[i % pool.length]);
-       }
-    } else {
-       targetPool = [...pool];
+    try {
+      const count = length === 'infinite' ? 10 : length;
+      const aiQuestions = await generateQuizQuestions(difficulty, count);
+      
+      let targetPool: Question[] = [];
+      
+      if (aiQuestions && aiQuestions.length > 0) {
+        targetPool = aiQuestions.map((q: any, i: number) => ({
+          id: Date.now() + i,
+          difficulty: difficulty,
+          question: q.question,
+          options: q.options,
+          correct: q.correct,
+          explanation: q.explanation
+        }));
+      } else {
+        // Fallback to static if AI fails
+        let pool = ALL_QUESTIONS.filter(q => q.difficulty === difficulty);
+        pool.sort(() => Math.random() - 0.5);
+        if (length !== 'infinite') {
+           for (let i = 0; i < count; i++) {
+             targetPool.push(pool[i % pool.length]);
+           }
+        } else {
+           targetPool = [...pool];
+        }
+      }
+      
+      setShuffledQuestions(targetPool);
+      setCurrentQ(0);
+      setScore(0);
+      setSelectedOption(null);
+      setHasAnswered(false);
+      setGameState('playing');
+    } catch (error) {
+      console.error("Error starting quiz", error);
+      // Fallback
+      let pool = ALL_QUESTIONS.filter(q => q.difficulty === difficulty);
+      pool.sort(() => Math.random() - 0.5);
+      setShuffledQuestions(pool.slice(0, length === 'infinite' ? 5 : length));
+      setGameState('playing');
     }
-    
-    setShuffledQuestions(targetPool);
-    setCurrentQ(0);
-    setScore(0);
-    setSelectedOption(null);
-    setHasAnswered(false);
-    setGameState('playing');
   };
 
   const handleSelect = (idx: number) => {
@@ -92,18 +119,24 @@ export default function Quiz() {
     }
   };
 
-  const nextQuestion = () => {
+  const nextQuestion = async () => {
     if (currentQ < shuffledQuestions.length - 1) {
       setCurrentQ(prev => prev + 1);
       setSelectedOption(null);
       setHasAnswered(false);
     } else {
       if (length === 'infinite') {
-         const newPool = ALL_QUESTIONS.filter(q => q.difficulty === difficulty).sort(() => Math.random() - 0.5);
-         setShuffledQuestions(prev => [...prev, ...newPool]);
-         setCurrentQ(prev => prev + 1);
-         setSelectedOption(null);
-         setHasAnswered(false);
+         setGameState('loading');
+         setTimeout(() => {
+           let newPool: Question[] = [];
+           newPool = ALL_QUESTIONS.filter(q => q.difficulty === difficulty).sort(() => Math.random() - 0.5);
+           
+           setShuffledQuestions(prev => [...prev, ...newPool]);
+           setCurrentQ(prev => prev + 1);
+           setSelectedOption(null);
+           setHasAnswered(false);
+           setGameState('playing');
+         }, 500);
       } else {
          setGameState('result');
       }
@@ -122,7 +155,7 @@ export default function Quiz() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto flex flex-col relative bg-[#050505] md:border border-white/5 md:rounded-[2.5rem] shadow-2xl p-4 md:p-8 mb-16 z-10 text-left overflow-y-auto max-h-[85vh] scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+    <div className="w-full max-w-3xl mx-auto flex flex-col relative p-4 mb-16 z-10 text-left">
       
       {gameState === 'menu' && (
         <motion.div 
@@ -130,7 +163,7 @@ export default function Quiz() {
           className="flex flex-col w-full justify-center items-center py-4 md:py-10 text-center"
         >
           <div className="mb-8">
-            <div className="mx-auto bg-green-500/10 p-4 rounded-[2rem] w-20 h-20 md:w-24 md:h-24 flex items-center justify-center mb-5 ring-1 ring-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+            <div className="mx-auto flex items-center justify-center mb-5">
                <Settings2 className="w-8 h-8 md:w-10 md:h-10 text-green-400" />
             </div>
             <h2 className="text-2xl md:text-3xl font-serif text-white mb-2">Configurar Quiz</h2>
@@ -183,6 +216,17 @@ export default function Quiz() {
              <Play className="w-4 h-4 md:w-5 md:h-5 fill-current" />
              Iniciar Teste
           </button>
+        </motion.div>
+      )}
+
+      {gameState === 'loading' && (
+        <motion.div 
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          className="flex flex-col w-full justify-center items-center py-20 text-center"
+        >
+          <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-6" />
+          <h2 className="text-xl md:text-2xl font-serif text-white mb-2">Gerando Teste Dinâmico...</h2>
+          <p className="text-slate-400 text-xs md:text-sm font-mono tracking-widest uppercase">Consultando base de conhecimento da Nave à Vela</p>
         </motion.div>
       )}
 

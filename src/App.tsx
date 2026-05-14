@@ -3,7 +3,7 @@ import EarthAnimation from './components/EarthAnimation';
 import FakeNewsDetector from './components/FakeNewsDetector';
 import Quiz from './components/Quiz';
 import TrainingManual from './components/TrainingManual';
-import { Search, Brain, BookOpen, AlertCircle, ArrowDown, ShieldCheck, CheckSquare, Globe, AlertTriangle, XCircle, TrendingDown, ArrowRight } from 'lucide-react';
+import { Search, Brain, BookOpen, AlertCircle, ArrowDown, ShieldCheck, CheckSquare, Globe, AlertTriangle, XCircle, TrendingDown, ArrowRight, Loader2, Activity } from 'lucide-react';
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'motion/react';
 
 export default function App() {
@@ -13,24 +13,44 @@ export default function App() {
 
   const { scrollY } = useScroll();
   
+  const [isInHistoricos, setIsInHistoricos] = useState(false);
+
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
     
     if (activeTab === 'home') {
+      const conteudoEl = document.getElementById('conteudo');
       const impactosEl = document.getElementById('impactos');
-      if (impactosEl) {
-        const threshold = impactosEl.offsetTop - (typeof window !== 'undefined' ? window.innerHeight / 2 : 400);
-        if (latest >= threshold) {
-          setActiveSection('impactos');
-        } else {
-          setActiveSection('inicio');
-        }
+      const deepfakesEl = document.getElementById('deepfakes');
+      const glossarioEl = document.getElementById('glossario');
+      
+      const threshold = (typeof window !== 'undefined' ? window.innerHeight / 2 : 400);
+
+      const isScrolledPast = (el: HTMLElement | null) => el && latest >= (el.offsetTop - threshold);
+
+      if (isScrolledPast(glossarioEl)) {
+        setActiveSection('glossario');
+        setIsInHistoricos(true);
+      } else if (isScrolledPast(deepfakesEl)) {
+        setActiveSection('deepfakes');
+        setIsInHistoricos(true);
+      } else if (isScrolledPast(impactosEl)) {
+        setActiveSection('impactos');
+        setIsInHistoricos(false);
+      } else if (isScrolledPast(conteudoEl)) {
+        setActiveSection('conteudo');
+        setIsInHistoricos(true);
+      } else {
+        setActiveSection('inicio');
+        setIsInHistoricos(false);
       }
+    } else {
+      setIsInHistoricos(false);
     }
   });
 
-  const isNavTop = activeTab === 'detector';
-  const showNavText = !isScrolled;
+  const isNavTop = activeTab !== 'home' || isInHistoricos;
+  const showNavText = !isScrolled && !isInHistoricos;
 
   useEffect(() => {
     // Force start at top
@@ -73,6 +93,18 @@ export default function App() {
             )}
             <AlertTriangle className={`w-5 h-5 shrink-0 transition-colors z-10 relative ${activeTab === 'home' && activeSection === 'impactos' ? 'text-red-400' : 'text-yellow-500 group-hover:text-red-500'}`} />
             <span className={`overflow-hidden transition-all duration-500 whitespace-nowrap z-10 relative max-md:hidden ${showNavText ? 'max-w-[100px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}`}>Impactos</span>
+          </button>
+
+          <button
+            onClick={() => { setActiveTab('home'); setActiveSection('deepfakes'); setTimeout(() => document.getElementById('deepfakes')?.scrollIntoView({ behavior: 'smooth' }), 50); }}
+            className={`flex items-center justify-center p-2 rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest group relative ${activeTab === 'home' && activeSection === 'deepfakes' ? 'text-purple-50 bg-purple-500/20 ring-1 ring-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.4)]' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+            title="Deepfakes"
+          >
+            {activeTab === 'home' && activeSection === 'deepfakes' && (
+              <span className="absolute inset-0 rounded-full animate-pulse bg-purple-500/10 shadow-[0_0_15px_rgba(168,85,247,0.6)] mix-blend-screen pointer-events-none"></span>
+            )}
+            <Activity className={`w-5 h-5 shrink-0 transition-colors z-10 relative ${activeTab === 'home' && activeSection === 'deepfakes' ? 'text-purple-400' : 'text-purple-500 group-hover:text-purple-400'}`} />
+            <span className={`overflow-hidden transition-all duration-500 whitespace-nowrap z-10 relative max-md:hidden ${showNavText ? 'max-w-[100px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}`}>Deepfakes</span>
           </button>
           
           <button
@@ -146,6 +178,28 @@ export default function App() {
               </motion.div>
 
               <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col sm:flex-row gap-3 items-center justify-center text-[10px] tracking-widest uppercase opacity-50 mt-4 font-mono"
+              >
+                <span>Gabriel Batista</span>
+                <span className="hidden sm:block w-1 h-1 bg-white/30 rounded-full"></span>
+                <span>Lucas Gabriel</span>
+                <span className="hidden sm:block w-1 h-1 bg-white/30 rounded-full"></span>
+                <span>Luiz Felipe</span>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center justify-center text-[10px] tracking-widest uppercase opacity-40 mt-3 font-mono"
+              >
+                Oásis Colégio e Curso
+              </motion.div>
+
+              <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -214,7 +268,7 @@ export default function App() {
                     <Globe className="w-3 h-3"/> <span className="underline decoration-red-500/50 decoration-wavy underline-offset-4">alerta-mundial-news-online.net</span>
                   </div>
                   
-                  <div className="aspect-[16/9] bg-white/5 rounded-md overflow-hidden relative border border-white/10 group">
+                  <div className="aspect-[16/9] bg-white/5 rounded-md overflow-hidden relative border border-white/10 group mb-4">
                      {/* Imagem lab/covid */}
                      <img src="https://images.unsplash.com/photo-1584483766114-2cea6facdf57?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover grayscale contrast-125 transition-transform duration-1000 group-hover:scale-105" alt="Lab" />
                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-6">
@@ -222,6 +276,9 @@ export default function App() {
                            <AlertCircle className="w-4 h-4" /> Imagem descontextualizada
                         </p>
                      </div>
+                  </div>
+                  <div className="text-[10px] text-slate-400 font-mono tracking-widest uppercase border-l-2 border-red-500/50 pl-3 py-1">
+                    Obs: Palavras com mais exclamações ("!!!") chamam a atenção do leitor facilmente.
                   </div>
                 </div>
               </motion.div>
@@ -231,7 +288,7 @@ export default function App() {
             <TrainingManual />
 
             {/* --- ESTUDOS DE CASO / EXEMPLOS --- */}
-            <div className="mt-24 pt-16 border-t border-white/10">
+            <div id="historicos" className="mt-24 pt-16 border-t border-white/10">
               <motion.h3 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -262,8 +319,11 @@ export default function App() {
                     <p className="text-sm text-slate-400 leading-relaxed mb-8 font-mono">
                       Arquivos mostram como postagens fraudulentas criaram pânico sobre tratamentos ineficazes. Títulos em caixa alta apelavam para o medo iminente da população ("SALVE SUA FAMÍLIA AGORA"), induzindo um comportamento irracional de compartilhamento sem checagem de fontes médicas oficiais.
                     </p>
-                    <a href="https://aosfatos.org/" target="_blank" rel="noopener noreferrer" className="text-xs text-slate-300 hover:text-white transition-colors font-bold uppercase tracking-widest flex items-center gap-2 group-hover:gap-3">
-                      Consultar Agências de Checagem <ArrowRight className="w-4 h-4" />
+                    <a href="https://aosfatos.org/" target="_blank" rel="noopener noreferrer" className="text-[10px] text-slate-500 hover:text-white transition-colors font-bold uppercase tracking-widest flex flex-col gap-2 group-hover:gap-3 items-start border-t border-white/10 pt-4 mt-auto">
+                      <span>Para checar notícias reais como essa ilustrada acima:</span>
+                      <span className="flex items-center gap-2 text-cyan-500">
+                        Acesse a Agência Aos Fatos <ArrowRight className="w-4 h-4" />
+                      </span>
                     </a>
                   </div>
                 </motion.div>
@@ -273,12 +333,12 @@ export default function App() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.2 }}
-                  className="bg-[#050505] border border-white/10 p-8 rounded-sm group hover:border-white/20 transition-all relative overflow-hidden"
+                  className="bg-[#050505] border border-white/10 p-8 rounded-sm group hover:border-white/20 transition-all relative overflow-hidden flex flex-col"
                 >
                   <div className="absolute top-0 right-0 p-4 opacity-5">
                      <Brain className="w-32 h-32 text-blue-500" />
                   </div>
-                  <div className="relative z-10 w-full">
+                  <div className="relative z-10 w-full flex-grow flex flex-col">
                     <div className="text-[10px] uppercase tracking-widest text-blue-400 mb-4 font-mono font-bold flex items-center gap-2">
                       <Brain className="w-3 h-3" /> Mecanismo: Viés de Confirmação
                     </div>
@@ -288,8 +348,11 @@ export default function App() {
                     <p className="text-sm text-slate-400 leading-relaxed mb-8 font-mono">
                       Um caso clássico ocorreu quando imagens de eventos de 2018 foram republicadas como sendo de protestos políticos recentes. Usuários cuja inclinação política se alinhava com as imagens engajaram massivamente com a publicação, validando falsamente o movimento que nunca aconteceu naquela data.
                     </p>
-                    <a href="https://lupa.uol.com.br/" target="_blank" rel="noopener noreferrer" className="text-xs text-slate-300 hover:text-white transition-colors font-bold uppercase tracking-widest flex items-center gap-2 group-hover:gap-3">
-                       Acessar Diretório Lupa <ArrowRight className="w-4 h-4" />
+                    <a href="https://lupa.uol.com.br/" target="_blank" rel="noopener noreferrer" className="text-[10px] text-slate-500 hover:text-white transition-colors font-bold uppercase tracking-widest flex flex-col gap-2 group-hover:gap-3 items-start border-t border-white/10 pt-4 mt-auto">
+                       <span>Para ver investigações reais sobre manipulação visual:</span>
+                       <span className="flex items-center gap-2 text-blue-500">
+                        Acesse a Agência Lupa <ArrowRight className="w-4 h-4" />
+                       </span>
                     </a>
                   </div>
                 </motion.div>
@@ -412,6 +475,110 @@ export default function App() {
                    <div className="text-sm md:text-base font-medium text-slate-300">Avaliação temporal e procedência de metadados das imagens submetidas.</div>
                 </div>
              </div>
+          </motion.div>
+        </section>
+
+        {/* --- EXTRA: O FUTURO DA DESINFORMAÇÃO --- */}
+        <section id="deepfakes" className="w-full py-32 px-6 bg-[#000000] border-t border-t-white/10 relative overflow-hidden">
+           {/* Fundo dinâmico com padrão */}
+           <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+           <motion.div 
+             initial={{ opacity: 0, y: 30 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.8 }}
+             className="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row gap-16 items-center"
+           >
+             <div className="flex-1 w-full relative">
+                <div className="aspect-square bg-slate-900 border border-white/10 rounded-sm overflow-hidden relative group">
+                  <div className="absolute inset-0 bg-blue-500/20 mix-blend-overlay z-10 animate-pulse"></div>
+                  <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=600" className="w-full h-full object-cover grayscale transition-transform duration-[2s] group-hover:scale-110" alt="IA e Deepfakes" />
+                  <div className="absolute top-4 left-4 right-4 bg-black/80 backdrop-blur-sm border border-white/10 text-white text-[10px] font-mono p-3 uppercase tracking-widest flex items-center gap-3">
+                    <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+                    Sintetizando Rosto 3D...
+                  </div>
+                </div>
+             </div>
+             
+             <div className="flex-1 w-full">
+                <div className="px-3 py-1 bg-white/5 border border-white/10 inline-block text-[10px] uppercase font-mono tracking-widest mb-6 font-bold text-slate-300">
+                  Nova Fronteira
+                </div>
+                <h3 className="text-4xl md:text-5xl font-serif text-white mb-6 leading-tight">
+                  A Ameaça das <span className="italic text-blue-400">Deepfakes</span>
+                </h3>
+                <p className="text-slate-400 text-sm md:text-base leading-relaxed mb-8">
+                  Com o avanço brutal da Inteligência Artificial Generativa, não precisamos mais apenas desmentir textos falsos. A nova era consiste em combater <strong>áudios e vídeos onde pessoas reais parecem falar coisas que jamais disseram</strong>.
+                </p>
+                
+                <ul className="space-y-6 text-sm text-slate-300 font-medium">
+                  <li className="flex items-start gap-4 p-4 border border-white/5 rounded-sm bg-white/[0.02]">
+                    <span className="text-blue-500 mt-1"><Activity className="w-5 h-5"/></span>
+                    <div>
+                      <strong className="block text-white mb-1">Clonagem de Voz</strong>
+                      Golpistas usam amostras curtas de áudio de parentes para forjar pedidos desesperados de dinheiro no WhatsApp.
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-4 p-4 border border-white/5 rounded-sm bg-white/[0.02]">
+                    <span className="text-blue-500 mt-1"><Globe className="w-5 h-5"/></span>
+                    <div>
+                      <strong className="block text-white mb-1">Fantoches Políticos</strong>
+                      Candidatos adversários sendo recriados em vídeos de alta definição cometendo infrações, manipulando eleições diretamente.
+                    </div>
+                  </li>
+                </ul>
+                
+                <p className="mt-8 text-xs text-slate-500 tracking-wider uppercase font-bold">Nunca confie cegamente. Verifique a fonte e os metadados.</p>
+             </div>
+           </motion.div>
+        </section>
+
+        {/* --- GLOSSÁRIO --- */}
+        <section id="glossario" className="w-full py-32 px-6 bg-[#020202] border-t border-t-white/5 relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-6xl mx-auto"
+          >
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">Glossário da Desinformação</h2>
+              <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto">
+                Termos-chave essenciais estudados para identificar as novas ameaças digitais.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-[#050505] border border-white/10 p-6 rounded-sm hover:-translate-y-2 transition-transform duration-300">
+                <BookOpen className="w-6 h-6 text-cyan-400 mb-4" />
+                <h4 className="text-white font-bold mb-2 uppercase tracking-wide text-sm">Deepfake</h4>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Mídia gerada por Inteligência Artificial que substitui rostos e vozes com realismo extremo para enganar usuários.
+                </p>
+              </div>
+              <div className="bg-[#050505] border border-white/10 p-6 rounded-sm hover:-translate-y-2 transition-transform duration-300">
+                <ShieldCheck className="w-6 h-6 text-green-400 mb-4" />
+                <h4 className="text-white font-bold mb-2 uppercase tracking-wide text-sm">Open Source Intelligence</h4>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Busca de fontes públicas abertas e cruzamento de dados na internet para validar informações e contextos reais.
+                </p>
+              </div>
+              <div className="bg-[#050505] border border-white/10 p-6 rounded-sm hover:-translate-y-2 transition-transform duration-300">
+                <AlertCircle className="w-6 h-6 text-red-500 mb-4" />
+                <h4 className="text-white font-bold mb-2 uppercase tracking-wide text-sm">Clickbait</h4>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Títulos iscas, extremamente chamativos ou falsos, com a intenção de lucrar com seus cliques.
+                </p>
+              </div>
+              <div className="bg-[#050505] border border-white/10 p-6 rounded-sm hover:-translate-y-2 transition-transform duration-300">
+                <TrendingDown className="w-6 h-6 text-yellow-500 mb-4" />
+                <h4 className="text-white font-bold mb-2 uppercase tracking-wide text-sm">Câmaras de Eco</h4>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Ambientes blindados por robôs onde mentiras são repetidas entre o grupo, censurando quem traz as opiniões divergentes reais da rua.
+                </p>
+              </div>
+            </div>
           </motion.div>
         </section>
 
