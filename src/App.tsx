@@ -73,13 +73,13 @@ export default function App() {
         >
           <button
             onClick={() => { setActiveTab('home'); setActiveSection('inicio'); window.scrollTo(0,0); }}
-            className={`flex items-center justify-center p-2 rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest group relative ${activeTab === 'home' && !['impactos', 'deepfakes'].includes(activeSection) ? 'text-cyan-50 bg-cyan-500/20 ring-1 ring-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.4)]' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+            className={`flex items-center justify-center p-2 rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest group relative ${activeTab === 'home' && !['impactos', 'deepfakes'].includes(activeSection) ? 'text-blue-50 bg-blue-500/20 ring-1 ring-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.4)]' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
             title="Início"
           >
             {activeTab === 'home' && !['impactos', 'deepfakes'].includes(activeSection) && (
-              <span className="absolute inset-0 rounded-full animate-pulse bg-cyan-500/10 shadow-[0_0_15px_rgba(6,182,212,0.6)] mix-blend-screen pointer-events-none"></span>
+              <span className="absolute inset-0 rounded-full animate-pulse bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.6)] mix-blend-screen pointer-events-none"></span>
             )}
-            <Globe className={`w-5 h-5 shrink-0 transition-colors z-10 relative ${activeTab === 'home' && !['impactos', 'deepfakes'].includes(activeSection) ? 'text-cyan-400' : 'group-hover:text-cyan-400'}`} />
+            <Globe className={`w-5 h-5 shrink-0 transition-colors z-10 relative ${activeTab === 'home' && !['impactos', 'deepfakes'].includes(activeSection) ? 'text-blue-400' : 'group-hover:text-blue-400'}`} />
             <span className={`overflow-hidden transition-all duration-500 whitespace-nowrap z-10 relative max-md:hidden ${showNavText ? 'max-w-[100px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}`}>Início</span>
           </button>
           
