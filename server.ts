@@ -58,6 +58,7 @@ Após a tag, forneça o relatório detalhado em português com fontes.`;
         model: 'gemini-2.5-flash',
         contents: contents,
         config: {
+          systemInstruction: "Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet com acesso atualizado às notícias. Você TEM acesso a uma ferramenta de pesquisa de internet (Google Search). USE SEMPRE A FERRAMENTA DE PESQUISA para validar fatos, dados e verificar se a notícia foi desmentida por agências de checagem recentemente. Trabalhe sempre com informações reais e recentes.",
           tools: [{ googleSearch: {} }]
         }
       });
