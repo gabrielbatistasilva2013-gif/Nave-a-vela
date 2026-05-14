@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
 import { Brain, Settings2, Play, RefreshCw, Layers, Loader2 } from 'lucide-react';
-import { generateQuizQuestions } from '../services/gemini';
 
 type Question = {
   id: number;
@@ -60,32 +59,20 @@ export default function Quiz() {
   const startQuiz = async () => {
     setGameState('loading');
     
-    try {
+    // Simulate loading for better UX
+    setTimeout(() => {
       const count = length === 'infinite' ? 10 : length;
-      const aiQuestions = await generateQuizQuestions(difficulty, count);
       
       let targetPool: Question[] = [];
+      let pool = ALL_QUESTIONS.filter(q => q.difficulty === difficulty);
+      pool.sort(() => Math.random() - 0.5);
       
-      if (aiQuestions && aiQuestions.length > 0) {
-        targetPool = aiQuestions.map((q: any, i: number) => ({
-          id: Date.now() + i,
-          difficulty: difficulty,
-          question: q.question,
-          options: q.options,
-          correct: q.correct,
-          explanation: q.explanation
-        }));
+      if (length !== 'infinite') {
+         for (let i = 0; i < count; i++) {
+           targetPool.push(pool[i % pool.length]);
+         }
       } else {
-        // Fallback to static if AI fails
-        let pool = ALL_QUESTIONS.filter(q => q.difficulty === difficulty);
-        pool.sort(() => Math.random() - 0.5);
-        if (length !== 'infinite') {
-           for (let i = 0; i < count; i++) {
-             targetPool.push(pool[i % pool.length]);
-           }
-        } else {
-           targetPool = [...pool];
-        }
+         targetPool = [...pool];
       }
       
       setShuffledQuestions(targetPool);
@@ -94,14 +81,7 @@ export default function Quiz() {
       setSelectedOption(null);
       setHasAnswered(false);
       setGameState('playing');
-    } catch (error) {
-      console.error("Error starting quiz", error);
-      // Fallback
-      let pool = ALL_QUESTIONS.filter(q => q.difficulty === difficulty);
-      pool.sort(() => Math.random() - 0.5);
-      setShuffledQuestions(pool.slice(0, length === 'infinite' ? 5 : length));
-      setGameState('playing');
-    }
+    }, 600);
   };
 
   const handleSelect = (idx: number) => {

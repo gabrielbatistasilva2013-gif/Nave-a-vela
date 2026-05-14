@@ -15,62 +15,8 @@ async function startServer() {
     res.json({ status: "ok" });
   });
 
-  // API Route for Quiz Generation
-  app.post("/api/quiz", async (req, res) => {
-    try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) {
-        throw new Error('GEMINI_API_KEY environment variable is not set');
-      }
-      const ai = new GoogleGenAI({ apiKey });
-      const { difficulty, count } = req.body;
-      const prompt = `Você está criando um quiz dinâmico sobre combate e detecção de Fake News para um projeto escolar chamado "Segurança Online com Nave à Vela - Oitavo Ano".
-A dificuldade solicitada é: ${difficulty}.
-Quantidade de perguntas a gerar: ${count}.
-
-BASE DE CONTEÚDO OBRIGATÓRIA DO SITE PARA ELABORAÇÃO DAS PERGUNTAS:
-1. O que são Fake News: Manipulações elaboradas projetadas para gerar indignação, medo ou choque.
-2. Engenharia Emocional: Títulos em CAIXA ALTA com exclamações tentam causar pânico para engajar.
-3. Viés de Confirmação: Algoritmos exibem informações que validam crenças preexistentes, criando câmaras de eco.
-4. Falsa Urgência/Descontextualização: Fotos e fatos antigos republicados como se fossem novos urgentes.
-5. Metodologia de Checagem: Análise sintática do texto, cruzamento de entidades, e avaliação temporal de metadados.
-6. Impactos: Saúde Pública (falsos tratamentos), Democracia e Economia (fraudes).
-
-Crie perguntas INÉDITAS e CRIATIVAS, focando estritamente nestes pontos. GERE PERGUNTAS SEMPRE DIFERENTES EM CADA CHAMADA para não ficar repetitivo.
-
-Retorne APENAS um JSON válido. O JSON deve ser um array com os objetos, cada objeto com:
-- "question" (string): A pergunta.
-- "options" (array de 4 strings): As 4 alternativas de resposta.
-- "correct" (number): O índice da resposta certa (de 0 a 3).
-- "explanation" (string): Uma explicação do porquê a resposta está certa baseada no conteúdo do site.
-O SEED DE GERAÇÃO AGORA É: ${Date.now()} e ${Math.random()}. Use essas sementes para gerar perguntas completamente diferentes da execução anterior.`;
-
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-        config: {
-          responseMimeType: "application/json",
-          temperature: 0.9,
-        }
-      });
-      
-      let data;
-      try {
-        data = JSON.parse(response.text || "[]");
-      } catch (e) {
-        console.error("Failed to parse", response.text);
-        data = [];
-      }
-
-      res.status(200).json({ questions: data });
-    } catch (error: any) {
-      console.error('Error generating quiz:', error);
-      res.status(500).json({ error: 'Deu erro ao se conectar ao servidor.', details: error.message || String(error) });
-    }
-  });
-
   // API Route for Gemini analysis
-  app.post("/api/analyze", async (req, res) => {
+  app.post("/api/analyze", async (req, res, next) => {
     try {
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) {
@@ -118,9 +64,14 @@ Após a tag, forneça o relatório detalhado em português com fontes.`;
 
       res.json({ analysis: response.text });
     } catch (error: any) {
-      console.error('Error analyzing content:', error);
-      res.status(500).json({ error: 'Falha ao conectar com a IA. Tente novamente mais tarde.', details: error.message || String(error) });
+      next(error);
     }
+  });
+
+  // Global Error Handler for API routes
+  app.use('/api', (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error('API Error:', err);
+    res.status(500).json({ error: 'Erro interno no servidor.', details: err.message || String(err) });
   });
 
   // Vite middleware for development
