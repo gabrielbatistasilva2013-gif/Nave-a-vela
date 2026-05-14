@@ -59,8 +59,9 @@ Após a tag, forneça o relatório detalhado em português com fontes.`;
         model: 'gemini-3-flash-preview',
         contents: contents,
         config: {
-          systemInstruction: "Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet. Você TEM acesso a uma ferramenta de pesquisa de internet (Google Search). Utilize-a para pesquisar os URLs ou temas informados para obter a verdade.",
-          tools: [{ googleSearch: {} }]
+          systemInstruction: "Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet. Você TEM acesso a uma ferramenta de pesquisa de internet (Google Search) e a capacidade de ler URLs (URL Context). Utilize-as para pesquisar os URLs ou temas informados para obter a verdade.",
+          tools: hasUrls ? [{ googleSearch: {} }, { urlContext: {} }] : [{ googleSearch: {} }],
+          toolConfig: { includeServerSideToolInvocations: true }
         }
       });
 
