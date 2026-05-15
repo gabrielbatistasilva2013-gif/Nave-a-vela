@@ -7,28 +7,32 @@ export async function analyzeFakeNews(text: string, images: { base64: string, mi
     });
 
     if (!response.ok) {
-      let errorText = "Falha ao conectar com o servidor.";
-      let errorMsgObj: any = {};
+      let errorText = "Falha ao conectar com o servidor. (Status: " + response.status + ")";
       try {
-         const errorData = await response.json();
-         errorMsgObj = errorData;
-         let errorMsg = errorData.error || errorData.details || errorText;
-         if (typeof errorMsg === 'string' && (errorMsg.includes('API key not valid') || errorMsg.includes('API_KEY_INVALID'))) {
-            errorText = "A chave da API do Gemini não é válida. Verifique as configurações (Settings) do AI Studio.";
+         const contentType = response.headers.get("content-type");
+         if (contentType && contentType.includes("application/json")) {
+           const errorData = await response.json();
+           errorText = errorData.error || errorText;
          } else {
-            errorText = typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg);
+           const text = await response.text();
+           if (response.status === 503) {
+             errorText = "O servidor está sobrecarregado no momento e não consegue responder agora. (Erro 503). Tente mais tarde.";
+           } else if (response.status === 404) {
+             errorText = "A rota de análise não foi encontrada (Erro 404). Se você acessou por um Share Link, publique as atualizações.";
+           } else {
+             errorText += " - " + text.slice(0, 100);
+           }
          }
       } catch (e) {
-         if (response.status === 404) {
-            errorText = "A rota /api/analyze não foi encontrada (Erro 404). Se você está acessando pelo link de compartilhamento (Share), você precisa Clicar em Settings > Exporte/Share > Share novamente para publicar as atualizações!";
-         } else {
-            errorText = `Erro do servidor (${response.status}): ${response.statusText}`;
-         }
+         // Ignore JSON parse errors
       }
       throw new Error(errorText);
     }
 
     const data = await response.json();
+    if (data.error) {
+      throw new Error(data.error);
+    }
     return data.analysis;
   } catch (error: any) {
     console.error('Error analyzing content:', error);

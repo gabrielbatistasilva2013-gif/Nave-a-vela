@@ -4,12 +4,15 @@ async function test() {
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: ['Text test'],
+      model: 'gemini-3-flash-preview',
+      contents: "hi",
+      config: {
+        tools: [{ urlContext: {} } as any]
+      }
     });
     console.log('Success:', response.text);
-  } catch (err) {
-    console.error('Error:', err);
+  } catch (err: any) {
+    console.error('Error:', err.message);
   }
 }
 test();
