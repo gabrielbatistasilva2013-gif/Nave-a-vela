@@ -15,7 +15,7 @@ async function startServer() {
       const apiKey = (process.env.gemini || process.env.GEMINI_API_KEY)?.trim();
       
       if (!apiKey || apiKey === 'undefined' || apiKey === 'null' || apiKey === '') {
-        return res.status(500).json({ error: "Chave da API do Gemini não configurada corretamente no servidor. Verifique o menu 'Settings' no AI Studio e insira uma chave válida." });
+        return res.status(500).json({ error: "Chave da API do Gemini não configurada. Se estiver no AI Studio, verifique o menu 'Settings'. Se fez deploy na Vercel, adicione a variável 'GEMINI_API_KEY' com sua chave nas configurações (Environment Variables) do seu projeto na Vercel." });
       }
 
       const ai = new GoogleGenAI({ apiKey });
