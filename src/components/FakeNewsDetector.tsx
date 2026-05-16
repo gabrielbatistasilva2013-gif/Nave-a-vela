@@ -170,12 +170,12 @@ export default function FakeNewsDetector() {
       <div className="text-left mb-10 relative z-10 border-b border-white/10 pb-8">
         <div className="flex justify-between items-start">
           <div>
-            <div className="inline-block bg-white text-black px-2 py-1 text-[10px] font-bold uppercase tracking-widest mb-4">Motor Inteligente</div>
+            <div className="inline-block bg-white text-black px-2 py-1 text-[10px] font-bold uppercase tracking-widest mb-4">Inteligência Artificial</div>
             <h2 className="text-3xl font-serif text-white mb-3">
-              Analisador de Casos
+              Testar uma Notícia
             </h2>
             <p className="text-sm text-slate-400 max-w-xl leading-relaxed">
-              Plataforma com cruzamento de dados, linguagem natural e análise metadados de imagem. Execute inferências enviando textos suspeitos ou imagens anexas.
+              Envie um texto, link ou até 3 imagens suspeitas para a nossa Inteligência Artificial analisar se a notícia tem chances de ser falsa.
             </p>
           </div>
         </div>
@@ -199,8 +199,8 @@ export default function FakeNewsDetector() {
             {/* Overlay content */}
             <div className="relative z-10 flex flex-col items-center">
                <Loader2 className="w-8 h-8 text-white mb-4 animate-spin opacity-80" />
-               <p className="text-white font-mono uppercase tracking-widest text-xs mb-2">Executando inferência</p>
-               <p className="text-slate-400 text-xs text-center max-w-xs font-mono">Processando vetores de linguagem...</p>
+               <p className="text-white font-mono uppercase tracking-widest text-xs mb-2">Lendo e Analisando</p>
+               <p className="text-slate-400 text-xs text-center max-w-xs font-mono">Procurando sinais de mentiras...</p>
             </div>
           </motion.div>
         )}
@@ -237,7 +237,7 @@ export default function FakeNewsDetector() {
           </div>
 
           <p className="text-[10px] text-slate-500 opacity-80 text-center max-w-sm mx-auto">
-            O detector pode cometer erros as vezes, as vezes é indicado consultar a notícia.
+            A Inteligência Artificial pode cometer erros de vez em quando, sempre confirme a notícia.
           </p>
           
           <div className="flex-1 space-y-4">
@@ -320,7 +320,7 @@ export default function FakeNewsDetector() {
               Limpar tudo
             </button>
             <div className="text-[10px] text-slate-500 tracking-wider hidden md:block">
-              Análise segura • Comparativo inteligente
+              Verificação Rápida
             </div>
           </div>
           <button

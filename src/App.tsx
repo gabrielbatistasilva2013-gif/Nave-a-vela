@@ -50,6 +50,7 @@ export default function App() {
   });
 
   const isNavTop = activeTab !== 'home' || isInHistoricos;
+  const isNavBottom = activeTab === 'home' && activeSection === 'glossario';
   const showNavText = !isScrolled && !isInHistoricos;
 
   useEffect(() => {
@@ -67,9 +68,9 @@ export default function App() {
       <div className="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-screen pointer-events-none z-0"></div>
       
       {/* Floating Navigation */}
-      <div className={`fixed inset-0 z-50 pointer-events-none flex transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isNavTop ? 'items-start justify-center pt-6' : 'max-md:items-end max-md:justify-center max-md:pb-6 md:items-center md:justify-end md:pr-8'}`}>
+      <div className={`fixed inset-0 z-50 pointer-events-none flex transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isNavTop ? 'items-start justify-center pt-6' : isNavBottom ? 'items-end justify-center pb-8' : 'max-md:items-end max-md:justify-center max-md:pb-6 md:items-center md:justify-end md:pr-8'}`}>
         <div 
-          className={`bg-[#050505]/80 backdrop-blur-md border border-white/10 p-2 rounded-[2rem] flex pointer-events-auto shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isNavTop ? 'flex-row gap-2' : 'max-md:flex-row max-md:gap-2 md:flex-col md:gap-3'}`}
+          className={`bg-[#050505]/80 backdrop-blur-md border border-white/10 p-2 rounded-[2rem] flex pointer-events-auto shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isNavTop || isNavBottom ? 'flex-row gap-2' : 'max-md:flex-row max-md:gap-2 md:flex-col md:gap-3'}`}
         >
           <button
             onClick={() => { setActiveTab('home'); setActiveSection('inicio'); window.scrollTo(0,0); }}
@@ -226,21 +227,21 @@ export default function App() {
               <div>
                  <h2 className="text-4xl md:text-5xl font-serif text-white mb-6">O que são Fake News?</h2>
                  <p className="text-slate-400 text-base md:text-lg leading-relaxed mb-8">
-                   Fake News não são apenas "erros". São manipulações elaboradas, projetadas psicologicamente para gerar <span className="text-white font-medium">indignação, medo ou choque</span>. Ao engatar suas emoções, os criadores desligam seu senso crítico.
+                   Fake News não são apenas erros. São mentiras criadas de propósito para causar <span className="text-white font-medium">raiva, medo ou choque</span>. Ao brincar com as suas emoções, elas fazem com que você pare de pensar criticamente.
                  </p>
                  <div className="space-y-8 mt-12 border-l border-white/10 pl-6">
                    <div className="flex gap-4 group">
                      <AlertCircle className="w-5 h-5 text-slate-300 shrink-0 mt-1" />
                      <div>
-                       <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-2">Engenharia Emocional</h3>
-                       <p className="text-slate-400 text-sm leading-relaxed">Títulos em CAIXA ALTA com muitos sinais de exclamação (!!!) que tentam causar pânico ou urgência para otimizar métricas de engajamento.</p>
+                       <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-2">Apelo Emocional</h3>
+                       <p className="text-slate-400 text-sm leading-relaxed">Títulos todos em MAIÚSCULAS e cheios de exclamações (!!!) que tentam causar pânico ou urgência para fazer você clicar e compartilhar logo.</p>
                      </div>
                    </div>
                    <div className="flex gap-4 group">
                      <Brain className="w-5 h-5 text-slate-300 shrink-0 mt-1" />
                      <div>
-                       <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-2">Viés de Confirmação</h3>
-                       <p className="text-slate-400 text-sm leading-relaxed">Algoritmos capitalizam o viés cognitivo humano, exibindo informações que validam crenças preexistentes, criando câmaras de eco herméticas.</p>
+                       <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-2">Criando Bolhas</h3>
+                       <p className="text-slate-400 text-sm leading-relaxed">As redes sociais nos mostram coisas que já concordamos, criando "bolhas" onde as mesmas informações (verdadeiras ou falsas) ficam se repetindo.</p>
                      </div>
                    </div>
                  </div>
@@ -311,13 +312,13 @@ export default function App() {
                   </div>
                   <div className="relative z-10 w-full">
                     <div className="text-[10px] uppercase tracking-widest text-red-400 mb-4 font-mono font-bold flex items-center gap-2">
-                      <AlertCircle className="w-3 h-3" /> Vetor de Ataque: Engenharia Emocional
+                      <AlertCircle className="w-3 h-3" /> Mecanismo: Apelo Emocional
                     </div>
                     <h4 className="text-xl text-white font-serif mb-4 leading-snug">
                       "A Falsa Cura Milagrosa"
                     </h4>
                     <p className="text-sm text-slate-400 leading-relaxed mb-8 font-mono">
-                      Arquivos mostram como postagens fraudulentas criaram pânico sobre tratamentos ineficazes. Títulos em caixa alta apelavam para o medo iminente da população ("SALVE SUA FAMÍLIA AGORA"), induzindo um comportamento irracional de compartilhamento sem checagem de fontes médicas oficiais.
+                      Postagens mentirosas criaram pânico sobre tratamentos que não funcionavam. Os textos usavam o medo da população ("SALVE SUA FAMÍLIA AGORA") para fazer com que as pessoas compartilhassem a notícia sem antes confirmar com médicos reais.
                     </p>
                     <a href="https://aosfatos.org/" target="_blank" rel="noopener noreferrer" className="text-[10px] text-slate-500 hover:text-white transition-colors font-bold uppercase tracking-widest flex flex-col gap-2 group-hover:gap-3 items-start border-t border-white/10 pt-4 mt-auto">
                       <span>Para checar notícias reais como essa ilustrada acima:</span>
@@ -340,13 +341,13 @@ export default function App() {
                   </div>
                   <div className="relative z-10 w-full flex-grow flex flex-col">
                     <div className="text-[10px] uppercase tracking-widest text-blue-400 mb-4 font-mono font-bold flex items-center gap-2">
-                      <Brain className="w-3 h-3" /> Mecanismo: Viés de Confirmação
+                      <Brain className="w-3 h-3" /> Mecanismo: Imagens Manipuladas
                     </div>
                     <h4 className="text-xl text-white font-serif mb-4 leading-snug">
                       "Imagens Fora de Contexto"
                     </h4>
                     <p className="text-sm text-slate-400 leading-relaxed mb-8 font-mono">
-                      Um caso clássico ocorreu quando imagens de eventos de 2018 foram republicadas como sendo de protestos políticos recentes. Usuários cuja inclinação política se alinhava com as imagens engajaram massivamente com a publicação, validando falsamente o movimento que nunca aconteceu naquela data.
+                      Em vários casos, imagens de protestos e eventos de anos atrás foram compartilhadas como se tivessem acontecido ontem. As pessoas acabaram acreditando e compartilhando em massa, espalhando a mentira sem perceber.
                     </p>
                     <a href="https://lupa.uol.com.br/" target="_blank" rel="noopener noreferrer" className="text-[10px] text-slate-500 hover:text-white transition-colors font-bold uppercase tracking-widest flex flex-col gap-2 group-hover:gap-3 items-start border-t border-white/10 pt-4 mt-auto">
                        <span>Para ver investigações reais sobre manipulação visual:</span>
@@ -455,24 +456,24 @@ export default function App() {
           >
              
              <div className="flex-1 md:pr-12 border-l-2 border-white pl-6">
-                <h3 className="text-3xl font-serif text-white mb-4">Metodologia de Veredito</h3>
+                <h3 className="text-3xl font-serif text-white mb-4">Como Verificar uma Notícia</h3>
                 <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-md">
-                   O processo rigoroso para analisar e identificar vetores de desinformação baseia-se em três etapas de cross-referencing em tempo real.
+                   Siga estes três passos simples para descobrir se uma notícia ou imagem é verdadeira ou falsa.
                 </p>
              </div>
              
              <div className="flex-1 grid gap-4 w-full">
                 <div className="bg-transparent py-4 border-b border-white/10 flex items-start gap-6 group">
                    <div className="text-lg font-mono text-slate-500 group-hover:text-white transition-colors">01</div>
-                   <div className="text-sm md:text-base font-medium text-slate-300">Análise sintática do corpo jornalístico para detectar padrões de manipulação.</div>
+                   <div className="text-sm md:text-base font-medium text-slate-300">Leia a notícia inteira prestando atenção em títulos exagerados ou informações sem sentido.</div>
                 </div>
                 <div className="bg-transparent py-4 border-b border-white/10 flex items-start gap-6 group">
                    <div className="text-lg font-mono text-slate-500 group-hover:text-white transition-colors">02</div>
-                   <div className="text-sm md:text-base font-medium text-slate-300">Cruzamento de entidades em diretórios e repositórios Open Source Intelligence.</div>
+                   <div className="text-sm md:text-base font-medium text-slate-300">Pesquise a mesma informação em outros sites e jornais diferentes e confiáveis.</div>
                 </div>
                 <div className="bg-transparent py-4 border-b border-white/10 flex items-start gap-6 group">
                    <div className="text-lg font-mono text-slate-500 group-hover:text-white transition-colors">03</div>
-                   <div className="text-sm md:text-base font-medium text-slate-300">Avaliação temporal e procedência de metadados das imagens submetidas.</div>
+                   <div className="text-sm md:text-base font-medium text-slate-300">Faça uma busca reversa da imagem no Google para ver se ela não é de anos atrás.</div>
                 </div>
              </div>
           </motion.div>
@@ -519,13 +520,13 @@ export default function App() {
              
              <div className="flex-1 w-full">
                 <div className="px-3 py-1 bg-white/5 border border-white/10 inline-block text-[10px] uppercase font-mono tracking-widest mb-6 font-bold text-slate-300">
-                  Nova Fronteira
+                  Nova Tecnologia
                 </div>
                 <h3 className="text-4xl md:text-5xl font-serif text-white mb-6 leading-tight">
                   A Ameaça das <span className="italic text-blue-400">Deepfakes</span>
                 </h3>
                 <p className="text-slate-400 text-sm md:text-base leading-relaxed mb-8">
-                  Com o avanço brutal da Inteligência Artificial Generativa, não precisamos mais apenas desmentir textos falsos. A nova era consiste em combater <strong>áudios e vídeos onde pessoas reais parecem falar coisas que jamais disseram</strong>.
+                  Com o avanço rápido da Inteligência Artificial, o problema não são mais apenas os textos falsos. Agora, o perigo são os <strong>áudios e vídeos falsificados onde pessoas reais parecem falar ou fazer coisas que nunca fizeram</strong>.
                 </p>
                 
                 <ul className="space-y-6 text-sm text-slate-300 font-medium">
@@ -533,21 +534,21 @@ export default function App() {
                     <span className="text-blue-500 mt-1"><Activity className="w-5 h-5"/></span>
                     <div>
                       <strong className="block text-white mb-1">Clonagem de Voz</strong>
-                      Golpistas usam amostras curtas de áudio de parentes para forjar pedidos desesperados de dinheiro no WhatsApp.
+                      Golpistas usam ferramentas de Inteligência Artificial para copiar a voz de parentes para pedir dinheiro emprestado no WhatsApp.
                     </div>
                   </li>
                   <li className="flex items-start gap-4 p-4 border border-white/5 rounded-sm bg-white/[0.02]">
                     <span className="text-blue-500 mt-1"><Globe className="w-5 h-5"/></span>
                     <div>
-                      <strong className="block text-white mb-1">Fantoches Políticos</strong>
-                      Candidatos adversários sendo recriados em vídeos de alta definição cometendo infrações, manipulando eleições diretamente.
+                      <strong className="block text-white mb-1">Pessoas Famosas</strong>
+                      Candidatos e pessoas famosas são recriados em vídeos para parecer que cometeram crimes ou falaram mentiras.
                     </div>
                   </li>
                   <li className="flex items-start gap-4 p-4 border border-white/5 rounded-sm bg-white/[0.02]">
                     <span className="text-blue-500 mt-1"><Brain className="w-5 h-5"/></span>
                     <div>
-                      <strong className="block text-white mb-1">Detecção de Manipulação Audiovisual</strong>
-                      Saber identificar deepfakes, imagens alteradas, áudios manipulados e vídeos editados de forma enganosa.
+                      <strong className="block text-white mb-1">Identificando Deepfakes</strong>
+                      Aprenda a notar sinais de que um vídeo é falso, como imagens com falhas e piscar de olhos estranho ou artificial.
                     </div>
                   </li>
                 </ul>
@@ -567,7 +568,7 @@ export default function App() {
             className="max-w-6xl mx-auto"
           >
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">Glossário da Desinformação</h2>
+              <h2 className="text-3xl md:text-5xl font-serif text-white mb-6">Termos Importantes</h2>
               <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto">
                 Termos-chave essenciais estudados para identificar as novas ameaças digitais.
               </p>
@@ -578,14 +579,14 @@ export default function App() {
                 <BookOpen className="w-6 h-6 text-cyan-400 mb-4" />
                 <h4 className="text-white font-bold mb-2 uppercase tracking-wide text-sm">Deepfake</h4>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  Mídia gerada por Inteligência Artificial que substitui rostos e vozes com realismo extremo para enganar usuários.
+                  Mídia criada ou alterada por Inteligência Artificial que copia o rosto ou voz de alguém para tentar enganar as pessoas.
                 </p>
               </div>
               <div className="bg-[#050505] border border-white/10 p-6 rounded-sm hover:-translate-y-2 transition-transform duration-300">
                 <ShieldCheck className="w-6 h-6 text-green-400 mb-4" />
-                <h4 className="text-white font-bold mb-2 uppercase tracking-wide text-sm">Open Source Intelligence</h4>
+                <h4 className="text-white font-bold mb-2 uppercase tracking-wide text-sm">Investigação Inteligente</h4>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  Busca de fontes públicas abertas e cruzamento de dados na internet para validar informações e contextos reais.
+                  Busca de informações em sites públicos, jornais confiáveis e redes para tentar descobrir o que é real e o que não é.
                 </p>
               </div>
               <div className="bg-[#050505] border border-white/10 p-6 rounded-sm hover:-translate-y-2 transition-transform duration-300">
@@ -597,9 +598,9 @@ export default function App() {
               </div>
               <div className="bg-[#050505] border border-white/10 p-6 rounded-sm hover:-translate-y-2 transition-transform duration-300">
                 <TrendingDown className="w-6 h-6 text-yellow-500 mb-4" />
-                <h4 className="text-white font-bold mb-2 uppercase tracking-wide text-sm">Câmaras de Eco</h4>
+                <h4 className="text-white font-bold mb-2 uppercase tracking-wide text-sm">Bolhas Virtuais</h4>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  Ambientes blindados por robôs onde mentiras são repetidas entre o grupo, censurando quem traz as opiniões divergentes reais da rua.
+                  Ambientes onde uma mesma mentira é falada várias vezes, fazendo com que as pessoas ignorem tudo o que é diferente do que elas já acreditam.
                 </p>
               </div>
             </div>
@@ -636,9 +637,9 @@ export default function App() {
                className="max-w-5xl mx-auto flex flex-col items-center w-full"
             >
               <div className="text-center mb-16 max-w-2xl mx-auto">
-                <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">Auditoria Final</h2>
+                <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">Avaliação Final</h2>
                 <p className="text-slate-400 leading-relaxed text-base md:text-lg">
-                  Avalie sua capacidade de identificar vetores de desinformação em cenários controlados.
+                  Teste o que você aprendeu com esse pequeno jogo e veja se você consegue identificar mentiras da internet!
                 </p>
               </div>
               <Quiz />
@@ -649,16 +650,21 @@ export default function App() {
       </main>
 
       {/* --- FOOTER --- */}
-      <footer className="relative w-full py-12 px-6 text-center text-[10px] uppercase tracking-widest text-slate-500 border-t border-white/10 opacity-80 flex flex-col items-center justify-center gap-6 z-10 bg-[#020202]">
-        <div className="flex gap-4">
-           <Globe className="w-4 h-4 opacity-50"/>
-           <ShieldCheck className="w-4 h-4 opacity-50"/>
-           <Brain className="w-4 h-4 opacity-50"/>
+      <footer className="relative w-full py-6 px-6 text-[10px] uppercase tracking-widest text-slate-500 border-t border-white/10 opacity-80 z-10 bg-[#020202]">
+        <div className="flex gap-4 justify-center items-center mb-4">
+           <Globe className="w-4 h-4 opacity-40"/>
+           <ShieldCheck className="w-4 h-4 opacity-40"/>
+           <Brain className="w-4 h-4 opacity-40"/>
         </div>
-        <div className="flex flex-col md:flex-row gap-2 md:gap-12 text-slate-400">
-          <p className="font-medium">Segurança Online com Nave à Vela - Oitavo Ano</p>
-          <p className="hidden md:block opacity-30">•</p>
-          <p>Gabriel Batista, Lucas Gabriel, Luiz Felipe</p>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400">
+          <p className="font-medium text-center md:text-left">Segurança Online com Nave à Vela - Oitavo Ano</p>
+          <p className="flex gap-2 items-center text-center md:text-right">
+            <span>Gabriel Batista</span>
+            <span className="opacity-30">•</span>
+            <span>Lucas Gabriel</span>
+            <span className="opacity-30">•</span>
+            <span>Luiz Felipe</span>
+          </p>
         </div>
       </footer>
     </div>

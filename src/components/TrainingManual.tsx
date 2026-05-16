@@ -44,9 +44,9 @@ const levels = [
     items: [
       { title: 'Conteúdo Impostor (First Draft News)', content: 'Forjar logotipos e o visual de fontes verdadeiras (como G1, SUS) para imprimir credibilidade falsa a mentiras inéditas.' },
       { title: 'Criptografia E2EE (Ponta a Ponta)', content: 'Dificulta o combate, pois a moderação de conteúdo no app é impossível de ler a mensagem em si sem quebrar a privacidade, focando apenas em limites de repasse e anomalias de rede.' },
-      { title: 'Firehose of Falsehood', content: 'Tática de guerra de informação: volume massivo, rápido e multicanal de falsidades constantes para esgotar as tentativas físicas de checagem. Antes de desmentida, o estrago já foi feito.' },
-      { title: 'Agnotologia (A Ciência da Dúvida)', content: 'Injeção de "dúvida fabricada" no público sobre temas cientificamente pacificados (ex: clima, cigarro) só para proteger empresas ou pautas obscurecidas.' },
-      { title: 'Desinformação vs. Misinformação', content: 'Desinformação é criada com a pura e dolosa intenção de manipular. A Misinformação ocorre sem dolo, no repasse do usuário que acredita estar ajudando cegamente.' }
+      { title: 'Firehose of Falsehood', content: 'Tática pesada: jogar muitas notícias falsas juntas em todos os lugares muito rápido, para cansar quem tenta desmentir.' },
+      { title: 'Plantando a Dúvida', content: 'Plantar uma "dúvida falsa" na cabeça das pessoas sobre coisas que a ciência já comprovou (ex: vacinas, clima) só para tentar causar confusão.' },
+      { title: 'Tipos de Mentiras', content: 'Existem mentiras criadas de propósito para enganar os outros. E também existem aquelas que pessoas compartilham achando que é verdade (na tentativa de ajudar alguém).' }
     ]
   },
   {
@@ -57,11 +57,11 @@ const levels = [
     border: 'border-purple-500/30',
     icon: <Cpu className="w-5 h-5 text-purple-400" />,
     items: [
-      { title: 'Falsa Conexão (Contested Mapping)', content: 'Liga-se manchetes de texto a imagens ou URLs reais que, na verdade, não dão sustentação ao título, desviando a associação mental natural do leitor apressado.' },
-      { title: 'Lei de Brandolini (Bullshit Asymmetry)', content: 'O princípio que estipula que a refutação qualificada de uma farsa online toma uma ordem de magnitude de esforço drasticamente maior do que a energia gasta para criá-la incialmente.' },
-      { title: 'Teoria do Gotejamento Reverso', content: 'Conspirações nascem lá embaixo em fóruns obscuros de nichos hiper-radicais na deep web e ganham tanta força orquestrada que acabam forçando a própria mídia clássica massiva a ter que reportá-las.' },
-      { title: 'Acordo de Santa Clara', content: 'Demanda sobre transparência nas plataformas. Postula que as redes informem dados transparentes das remoções e deem caminhos justos de contestação contra as lógicas de moderações ocultas algorítmicas.' },
-      { title: 'Síndrome de Correção Hipócrita (Whataboutism)', content: 'Ocorre com extrema dissonância cognitiva: o indivíduo é provado factualmente que espalhou mentiras e, para não assumir a culpa do ato, muda de foco e ataca terceiros (E o seu partido? E a sua falha de 1999?).' }
+      { title: 'Falsa Conexão', content: 'Colocar imagens ou links verdadeiros com títulos de notícias falsas. Como as pessoas estão com pressa, elas só olham a imagem e o título e acham que tudo é verdade.' },
+      { title: 'Lei de Brandolini', content: 'Essa lei diz que a energia e o tempo que gastamos para conseguir desmentir uma mentira da internet é muito maior do que as pessoas gastaram para criá-la.' },
+      { title: 'Do Fundo da Internet', content: 'Mentiras muito malucas que começam em fóruns escondidos da internet e ganham tanta fama compartilhada que chegam até mesmo na mídia.' },
+      { title: 'Acordo de Santa Clara', content: 'Uma cobrança para que as redes sociais sejam honestas conosco, avisando e explicando muito bem caso elas apaguem alguma publicação, além de dar alguma opção clara para a pessoa poder se defender.' },
+      { title: 'O Pulo do Gato (Whataboutism)', content: 'Quando uma pessoa percebe que espalhou uma notícia falsa, ao invés dela admitir o erro, ela muda de assunto e começa a apontar o dedo ou criticar outras coisas para se livrar.' }
     ]
   }
 ];
@@ -77,7 +77,7 @@ export default function TrainingManual() {
         </div>
         <h2 className="text-3xl md:text-5xl font-serif text-white mb-4">Manual de Sobrevivência</h2>
         <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-2xl mx-auto">
-          Tudo o que você precisa dominar para detectar falácias e vencer a simulação algorítmica do quiz, indo de lições triviais até as engrenagens psicológicas subjacentes.
+          Tudo o que você precisa saber para não ser enganado na internet e ir bem no nosso pequeno jogo. Se prepare aprendendo desde o básico até o mais avançado!
         </p>
       </div>
 
