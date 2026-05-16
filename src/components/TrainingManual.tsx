@@ -70,37 +70,54 @@ export default function TrainingManual() {
   const [openLevel, setOpenLevel] = useState<string | null>(null);
 
   return (
-    <div className="w-full max-w-4xl mx-auto my-16 bg-[#050505] p-6 md:p-10 border border-white/10 rounded-sm">
-      <div className="text-center mb-10">
-        <div className="inline-block px-3 py-1 mb-4 border border-white/20 bg-white/5 text-[10px] font-bold uppercase tracking-widest text-slate-300">
-          Base de Conhecimento
-        </div>
-        <h2 className="text-3xl md:text-5xl font-serif text-white mb-4">Manual de Sobrevivência</h2>
+    <div className="w-full max-w-4xl mx-auto my-20 bg-[#050505]/80 backdrop-blur-3xl p-6 md:p-10 border border-white/10 rounded-[2rem] relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] group/manual hover:border-white/20 transition-all duration-700">
+      
+      {/* Decorative top pulse */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
+      
+      <div className="text-center mb-12 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          className="inline-block px-4 py-2 mb-6 rounded-full border border-blue-500/30 bg-blue-500/10 text-[10px] font-bold uppercase tracking-widest text-blue-300 shadow-[0_0_20px_rgba(59,130,246,0.15)] backdrop-blur-md"
+        >
+          Base de Dados Confidencial
+        </motion.div>
+        <h2 className="text-3xl md:text-4xl font-serif text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/70">Manual de Sobrevivência</h2>
         <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-2xl mx-auto">
           Tudo o que você precisa saber para não ser enganado na internet e ir bem no nosso pequeno jogo. Se prepare aprendendo desde o básico até o mais avançado!
         </p>
       </div>
 
-      <div className="space-y-4">
-        {levels.map((level) => {
+      <div className="space-y-4 relative z-10">
+        {levels.map((level, idx) => {
           const isOpen = openLevel === level.id;
 
           return (
-            <div key={level.id} className={cn("border rounded-sm transition-all duration-300", isOpen ? level.border : "border-white/10")}>
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: idx * 0.1 }}
+              viewport={{ once: true }}
+              key={level.id} 
+              className={cn("border rounded-xl transition-all duration-500 overflow-hidden shadow-inner backdrop-blur-sm", isOpen ? level.border : "border-white/10")}
+            >
               <button
                 onClick={() => setOpenLevel(isOpen ? null : level.id)}
                 className={cn(
-                  "w-full flex items-center justify-between p-4 md:p-6 text-left transition-colors",
-                  isOpen ? level.bg : "hover:bg-white/5"
+                  "w-full flex items-center justify-between p-4 md:p-6 text-left transition-colors focus:outline-none",
+                  isOpen ? level.bg + " bg-opacity-50" : "hover:bg-white/5 bg-black/40"
                 )}
               >
                 <div className="flex items-center gap-4">
-                  {level.icon}
+                  <div className={cn("p-3 rounded-xl border backdrop-blur-md transition-all duration-500", isOpen ? "border-transparent bg-black/40 scale-110" : "border-white/10 bg-black/40")}>
+                    {level.icon}
+                  </div>
                   <h3 className={cn("font-serif text-xl sm:text-2xl transition-colors", isOpen ? level.color : "text-white")}>
                     {level.name}
                   </h3>
                 </div>
-                <ChevronDown className={cn("w-5 h-5 shrink-0 transition-transform duration-300", isOpen ? "rotate-180 text-white" : "text-slate-500")} />
+                <ChevronDown className={cn("w-5 h-5 shrink-0 transition-transform duration-500", isOpen ? "rotate-180 " + level.color : "text-slate-500")} />
               </button>
               
               <AnimatePresence>
@@ -109,20 +126,21 @@ export default function TrainingManual() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <div className="p-4 md:p-6 border-t border-white/10 bg-[#000000] space-y-6">
-                      {level.items.map((item, idx) => (
-                        <div key={idx} className="border-l-2 border-white/10 pl-4 py-1">
-                          <h4 className="text-white text-sm md:text-base font-bold uppercase tracking-widest mb-2 font-mono">{item.title}</h4>
-                          <p className="text-slate-400 text-sm leading-relaxed">{item.content}</p>
+                    <div className={cn("p-4 md:p-6 border-t border-white/10 space-y-4", level.bg, "bg-opacity-10 backdrop-blur-3xl")}>
+                      {level.items.map((item, idxx) => (
+                        <div key={idxx} className={cn("border-l-2 pl-4 py-1", isOpen ? level.border : "border-white/10")}>
+                          <h4 className={cn("text-sm md:text-base font-bold uppercase tracking-widest mb-1 font-mono drop-shadow-md", level.color)}>{item.title}</h4>
+                          <p className="text-slate-300 text-sm md:text-sm leading-relaxed">{item.content}</p>
                         </div>
                       ))}
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           );
         })}
       </div>

@@ -135,66 +135,77 @@ export default function Quiz() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto flex flex-col relative p-4 mb-16 z-10 text-left">
+    <div className="w-full max-w-4xl mx-auto flex flex-col relative p-6 mb-16 z-10 text-left bg-[#050505]/60 backdrop-blur-3xl rounded-[2.5rem] border border-white/5 shadow-[0_0_60px_rgba(0,0,0,0.5)]">
+      
+      {/* Quiz Ambient Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-cyan-500/5 via-transparent to-green-500/5 opacity-50 pointer-events-none rounded-[2.5rem]"></div>
       
       {gameState === 'menu' && (
         <motion.div 
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col w-full justify-center items-center py-4 md:py-10 text-center"
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col w-full justify-center items-center py-6 md:py-10 text-center z-10"
         >
-          <div className="mb-8">
-            <div className="mx-auto flex items-center justify-center mb-5">
-               <Settings2 className="w-8 h-8 md:w-10 md:h-10 text-green-400" />
+          <div className="mb-10 relative">
+            <div className="absolute inset-0 bg-green-500/20 blur-2xl rounded-full"></div>
+            <div className="mx-auto flex items-center justify-center mb-6 relative bg-green-500/10 w-24 h-24 rounded-[2rem] border border-green-500/30">
+               <Settings2 className="w-12 h-12 text-green-400" />
             </div>
-            <h2 className="text-2xl md:text-3xl font-serif text-white mb-2">Configurar Quiz</h2>
-            <p className="text-slate-400 text-xs md:text-sm font-mono tracking-widest uppercase">Personalize seu teste de foco</p>
+            <h2 className="text-3xl md:text-5xl font-serif text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">Configuração de Treinamento</h2>
+            <p className="text-slate-400 text-xs md:text-sm font-mono tracking-widest uppercase">Selecione os parâmetros do seu simulador cognitivo</p>
           </div>
           
-          <div className="w-full max-w-xl flex flex-col md:flex-row gap-6 mb-10 text-left">
-             <div className="flex-1 flex flex-col gap-2">
-               <label className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1 pl-1">Grau de Dificuldade</label>
-               {(['easy', 'medium', 'hard', 'impossible'] as const).map(diff => (
-                 <button
-                   key={diff}
-                   onClick={() => setDifficulty(diff)}
-                   className={cn(
-                     "px-4 py-3 rounded-2xl border text-xs md:text-sm font-bold tracking-widest uppercase transition-all flex justify-center",
-                     difficulty === diff 
-                       ? `${diffStyles[diff].bg} ${diffStyles[diff].border} ${diffStyles[diff].text} ${diffStyles[diff].shadow}`
-                       : `bg-[#0a0a0a] border-white/5 text-slate-400 ${diffStyles[diff].hover}`
-                   )}
-                 >
-                   {diffStyles[diff].name}
-                 </button>
-               ))}
+          <div className="w-full max-w-xl flex flex-col md:flex-row gap-6 md:gap-10 mb-12 text-left">
+             <div className="flex-1 flex flex-col gap-3">
+               <label className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-2 flex items-center gap-2">
+                 <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div> Nível de Ameaça
+               </label>
+               <div className="grid grid-cols-2 gap-2 md:gap-3">
+                 {(['easy', 'medium', 'hard', 'impossible'] as const).map(diff => (
+                   <button
+                     key={diff}
+                     onClick={() => setDifficulty(diff)}
+                     className={cn(
+                       "px-4 py-4 rounded-xl border text-xs font-bold tracking-widest uppercase transition-all duration-300 flex justify-center items-center gap-2",
+                       difficulty === diff 
+                         ? `${diffStyles[diff].bg} ${diffStyles[diff].border} ${diffStyles[diff].text} ${diffStyles[diff].shadow} scale-[1.02]`
+                         : `bg-black/50 border-white/5 text-slate-400 ${diffStyles[diff].hover}`
+                     )}
+                   >
+                     {diffStyles[diff].name}
+                   </button>
+                 ))}
+               </div>
              </div>
              
-             <div className="flex-1 flex flex-col gap-2">
-               <label className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1 pl-1">Extensão</label>
-               {([5, 7, 10, 'infinite'] as const).map(len => (
-                 <button
-                   key={len}
-                   onClick={() => setLength(len)}
-                   className={cn(
-                     "px-4 py-3 flex justify-between items-center rounded-2xl border text-xs md:text-sm font-bold tracking-widest uppercase transition-all",
-                     length === len 
-                       ? "bg-blue-500/10 border-blue-500/30 text-blue-400 shadow-[inset_0_0_20px_rgba(59,130,246,0.1)]" 
-                       : "bg-[#0a0a0a] border-white/5 text-slate-400 hover:bg-white/5 hover:text-white"
-                   )}
-                 >
-                   <span>{len === 'infinite' ? 'Infinito' : `${len} Perguntas`}</span>
-                   {len === 'infinite' && <Layers className="w-4 h-4 opacity-50" />}
-                 </button>
-               ))}
+             <div className="flex-1 flex flex-col gap-3">
+               <label className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-2 flex items-center gap-2">
+                 <div className="w-1.5 h-1.5 rounded-full bg-cyan-500"></div> Extensão
+               </label>
+               <div className="grid grid-cols-2 gap-2 md:gap-3">
+                 {([5, 7, 10, 'infinite'] as const).map(len => (
+                   <button
+                     key={len}
+                     onClick={() => setLength(len)}
+                     className={cn(
+                       "px-4 py-4 flex justify-between items-center rounded-xl border text-xs font-bold tracking-widest uppercase transition-all duration-300",
+                       length === len 
+                         ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.2)] scale-[1.02]" 
+                         : "bg-black/50 border-white/5 text-slate-400 hover:bg-white/5 hover:border-cyan-500/30 hover:text-cyan-400"
+                     )}
+                   >
+                     <span>{len === 'infinite' ? 'Infinito' : `${len} Questões`}</span>
+                   </button>
+                 ))}
+               </div>
              </div>
           </div>
           
           <button 
              onClick={startQuiz}
-             className="w-full md:w-auto px-10 py-4 bg-white text-black hover:bg-slate-200 rounded-full font-bold uppercase tracking-widest transition-transform hover:scale-105 active:scale-95 flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,255,255,0.2)] text-xs md:text-sm"
+             className="w-full md:w-auto px-12 py-5 bg-white text-black hover:bg-slate-200 rounded-full font-bold uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,255,255,0.3)] text-xs border-[4px] border-white/20 hover:border-white/50"
           >
-             <Play className="w-4 h-4 md:w-5 md:h-5 fill-current" />
-             Iniciar Teste
+             <Play className="w-4 h-4 fill-current" />
+             Iniciar Simulação
           </button>
         </motion.div>
       )}
@@ -213,20 +224,21 @@ export default function Quiz() {
       {gameState === 'playing' && shuffledQuestions.length > 0 && (
         <motion.div 
            initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-           className="relative z-10 w-full flex flex-col py-2"
+           className="relative z-10 w-full flex flex-col py-6 md:px-6"
         >
-          <div className="flex justify-between items-center mb-6 text-[10px] tracking-widest uppercase text-slate-500 font-mono">
-            <span>
-              {length === 'infinite' ? `Modo ${diffStyles[difficulty].name} | Acertos: ${score}` : `${diffStyles[difficulty].name} | P${currentQ + 1} de ${shuffledQuestions.length}`}
+          <div className="flex justify-between items-center mb-8 pb-4 border-b border-white/10 text-[10px] tracking-[0.2em] uppercase text-slate-500 font-mono">
+            <span className="flex items-center gap-3">
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+              {length === 'infinite' ? `Modo ${diffStyles[difficulty].name} | Acertos: ${score}` : `${diffStyles[difficulty].name} | Alvo ${currentQ + 1} de ${shuffledQuestions.length}`}
             </span>
             {length !== 'infinite' && (
-              <div className="flex flex-wrap gap-1 max-w-[150px] justify-end">
+              <div className="flex gap-1.5 md:gap-2">
                 {shuffledQuestions.map((_, i) => (
                   <div 
                     key={i} 
                     className={cn(
-                      "w-3 h-1 transition-colors rounded-full",
-                      i === currentQ ? "bg-white" : i < currentQ ? "bg-slate-700" : "bg-white/10"
+                      "w-4 md:w-8 h-1 transition-all duration-500 rounded-full",
+                      i === currentQ ? "bg-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.8)]" : i < currentQ ? "bg-slate-700" : "bg-white/10"
                     )}
                   />
                 ))}
@@ -234,25 +246,25 @@ export default function Quiz() {
             )}
           </div>
 
-          <h3 className="text-lg md:text-xl font-serif text-white mb-6 md:mb-8 border-l-2 border-white/20 pl-4 md:pl-5 leading-relaxed">
+          <h3 className="text-xl md:text-3xl font-serif text-white mb-10 leading-relaxed drop-shadow-md">
             {shuffledQuestions[currentQ].question}
           </h3>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             <AnimatePresence mode="wait">
               {shuffledQuestions[currentQ].options.map((opt, idx) => {
                 const isCorrect = idx === shuffledQuestions[currentQ].correct;
                 const isSelected = selectedOption === idx;
                 
-                let btnStyle = "bg-[#0a0a0a] border-white/5 text-slate-400 hover:text-white hover:bg-white/5 hover:border-white/10";
+                let btnStyle = "bg-black/60 border-white/10 text-slate-300 hover:text-white hover:bg-white/10 hover:border-white/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] text-sm md:text-base";
                 
                 if (hasAnswered) {
                   if (isCorrect) {
-                     btnStyle = "bg-green-900/20 border-green-500/50 text-green-300 shadow-[inset_0_0_15px_rgba(34,197,94,0.1)]";
+                     btnStyle = "bg-green-500/20 border-green-500/50 text-green-300 shadow-[0_0_30px_rgba(34,197,94,0.2)] text-sm md:text-base scale-[1.02] z-10 relative";
                   } else if (isSelected) {
-                     btnStyle = "bg-red-900/20 border-red-500/50 text-red-300";
+                     btnStyle = "bg-red-500/10 border-red-500/30 text-red-400 text-sm md:text-base";
                   } else {
-                     btnStyle = "bg-[#050505] border-white/5 text-slate-600 opacity-40";
+                     btnStyle = "bg-[#050505] border-white/5 text-slate-700 opacity-30 text-sm md:text-base";
                   }
                 }
 
@@ -261,14 +273,21 @@ export default function Quiz() {
                      key={`${currentQ}-${idx}`}
                      disabled={hasAnswered}
                      onClick={() => handleSelect(idx)}
-                     whileHover={!hasAnswered ? { scale: 1.01 } : {}}
+                     whileHover={!hasAnswered ? { scale: 1.02, x: 5 } : {}}
                      whileTap={!hasAnswered ? { scale: 0.98 } : {}}
                      className={cn(
-                       "w-full text-left p-4 md:p-5 rounded-2xl border transition-all duration-300 shadow-sm leading-relaxed text-sm",
+                       "w-full text-left p-5 md:p-6 rounded-2xl border transition-all duration-300 shadow-inner flex items-start gap-4",
                        btnStyle
                      )}
                    >
-                     {opt}
+                     <div className={cn(
+                        "w-6 h-6 rounded-full border border-current flex items-center justify-center shrink-0 mt-0.5 transition-colors",
+                        hasAnswered && isCorrect ? "bg-green-500/20" : hasAnswered && isSelected ? "bg-red-500/20" : ""
+                     )}>
+                        {hasAnswered && isCorrect && <CheckSquare className="w-3 h-3" />}
+                        {hasAnswered && isSelected && !isCorrect && <XCircle className="w-3 h-3" />}
+                     </div>
+                     <span className="leading-relaxed">{opt}</span>
                    </motion.button>
                 );
               })}
@@ -324,43 +343,49 @@ export default function Quiz() {
 
       {gameState === 'result' && (
         <motion.div 
-           initial={{ opacity: 0, scale: 0.95 }}
-           animate={{ opacity: 1, scale: 1 }}
+           initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
            className="relative z-10 flex flex-col items-center justify-center py-10 md:py-16 text-center"
         >
-          <div className="w-24 h-24 md:w-28 md:h-28 mb-6 md:mb-8 rounded-[2rem] bg-white/5 border border-white/20 flex items-center justify-center flex-col shadow-[0_0_50px_rgba(255,255,255,0.05)] ring-1 ring-white/10">
-            <span className="text-4xl font-serif text-white">{score}</span>
-            {length !== 'infinite' && (
-              <span className="text-[10px] text-slate-500 uppercase tracking-widest mt-1">/ {shuffledQuestions.length}</span>
-            )}
+          <div className="relative mb-8 md:mb-10 w-full flex justify-center">
+             <div className="absolute inset-0 bg-blue-500/10 blur-3xl rounded-full w-full h-full scale-[2]"></div>
+             <div className="w-28 h-28 md:w-36 md:h-36 rounded-[2.5rem] bg-black/50 backdrop-blur-xl border border-white/20 flex items-center justify-center flex-col shadow-[0_0_80px_rgba(59,130,246,0.15)] ring-1 ring-blue-500/30 relative z-10 transition-transform hover:scale-105 duration-500">
+               <span className="text-5xl md:text-6xl font-serif text-white bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70">{score}</span>
+               {length !== 'infinite' && (
+                 <span className="text-xs text-slate-400 uppercase tracking-widest mt-2 border-t border-white/10 pt-2 w-12 mx-auto">/ {shuffledQuestions.length}</span>
+               )}
+             </div>
           </div>
           
-          <h2 className="text-xl md:text-2xl font-serif text-white mb-3">
+          <h2 className="text-2xl md:text-4xl font-serif text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/50">
              {length === 'infinite' 
-               ? `Fim da Simulação! Desvios totais: ${score}`
+               ? `Simulação Finalizada: ${score} Ameaças Neutralizadas`
                : score === shuffledQuestions.length 
-                 ? "Blindado." 
+                 ? "Blindado. Resposta Impecável." 
                  : score >= shuffledQuestions.length / 2 
                    ? "Mente Alerta, Mas Vulnerável." 
-                   : "Defesas Comprometidas. Alta Vulnerabilidade."
+                   : "Defesas Comprometidas."
              }
           </h2>
           
-          <p className="text-slate-400 max-w-md text-xs md:text-sm mb-10 leading-relaxed px-4">
-             {length === 'infinite' 
-               ? "Basta um único elo quebrado para contaminar a rede. Você resistiu até aqui."
-               : score === shuffledQuestions.length
-                 ? "Agentes críticos não são dobrados pelo algoritmo de retenção das redes hiperconectadas."
-                 : "Táticas de engenharia social focam na emoção acelerada das vítimas que pararam de raciocinar com o detector natural."
-             }
-          </p>
+          <div className="p-6 md:p-8 bg-black/40 border border-white/10 rounded-3xl mb-10 w-full max-w-lg backdrop-blur-sm shadow-inner mx-auto">
+             <p className="text-slate-300 text-sm md:text-base leading-relaxed">
+               {length === 'infinite' 
+                 ? "Basta um único elo quebrado para contaminar a rede. Você resistiu bravamente até um erro fatal ser detectado. Seu alerta pode ser seu melhor escudo na navegação web diária."
+                 : score === shuffledQuestions.length
+                   ? "Você evitou perfeitamente todas as anomalias cognitivas. Suas defesas contra a manipulação cibernética são notáveis! Continue operando neste nível de excelência."
+                   : score >= shuffledQuestions.length / 2
+                     ? "Você possui boas noções, mas uma pequena escorregada na checagem pode abrir as portas para um contágio digital profundo nas suas conexões sociais."
+                     : "Engenharia social e manchetes tóxicas dominam suas emoções. Recomendamos acesso imediato à Base de Dados Confidencial."
+               }
+             </p>
+          </div>
 
           <button
             onClick={resetToMenu}
-            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-white/20 hover:bg-white/10 text-white rounded-full transition-all text-[10px] md:text-xs font-bold uppercase tracking-widest shadow-sm hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+            className="flex items-center gap-3 px-8 py-4 md:px-10 md:py-5 border border-white/20 hover:bg-white text-white hover:text-black rounded-full transition-all text-xs md:text-sm font-bold uppercase tracking-widest shadow-sm hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] hover:scale-105"
           >
-            <RefreshCw className="w-4 h-4 md:w-5 md:h-5" />
-            Recomeçar Triagem
+            <RefreshCw className="w-5 h-5 md:w-6 md:h-6" />
+            Nova Triagem
           </button>
         </motion.div>
       )}

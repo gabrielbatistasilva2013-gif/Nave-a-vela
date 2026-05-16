@@ -15,7 +15,7 @@ async function startServer() {
       const apiKey = (process.env.gemini || process.env.GEMINI_API_KEY)?.trim();
       
       if (!apiKey || apiKey === 'undefined' || apiKey === 'null' || apiKey === '') {
-        return res.status(500).json({ error: "Chave da API do Gemini não configurada. Se estiver no AI Studio, verifique o menu 'Settings'. Se fez deploy na Vercel, adicione a variável 'GEMINI_API_KEY' com sua chave nas configurações (Environment Variables) do seu projeto na Vercel." });
+        return res.status(500).json({ error: "Chave do sistema não configurada. Verifique as configurações." });
       }
 
       const ai = new GoogleGenAI({ apiKey });
@@ -85,20 +85,15 @@ Após a tag, forneça o relatório detalhado em português com fontes ou referê
 
       res.json({ analysis: response?.text || "Análise concluída, porém sem texto de resposta." });
     } catch (error: any) {
-      console.error("Error evaluating with Gemini:", error);
+      console.error("Error evaluating:", error);
       
       const errorMessage = error.message || "";
       if (errorMessage.includes("API key not valid") || errorMessage.includes("API_KEY_INVALID")) {
-          const rawKey = process.env.gemini || process.env.GEMINI_API_KEY || "";
-          if (rawKey === "MY_GEMINI_API_KEY" || rawKey === "AI Studio Free Tier") {
-              return res.status(500).json({ error: "Erro: A chave configurada no AI Studio é a free tier ou inválida." });
-          }
-          const keyInfo = rawKey ? `(Sua chave atual começa com: '${rawKey[0]}' e tem ${rawKey.length} caracteres)` : "(Nenhuma chave configurada)";
-          return res.status(500).json({ error: `A chave da API do Gemini informada é inválida ${keyInfo}. Acesse Menu -> Settings -> Secrets e certifique-se de que a secret 'gemini' (ou GEMINI_API_KEY) contém uma chave válida que começa com 'AIzaSy'.` });
+          return res.status(500).json({ error: "A chave de configuração atual é inválida. Verifique as configurações de sistema." });
       }
 
       if (errorMessage.includes("500") || errorMessage.includes("UNAVAILABLE") || errorMessage.includes("503") || errorMessage.includes("429")) {
-          return res.status(503).json({ error: "O modelo (Gemini) está muito sobrecarregado no momento e não consegue responder agora. Espere alguns instantes e tente analisar novamente." });
+          return res.status(503).json({ error: "O sistema está muito sobrecarregado no momento e não consegue responder agora. Espere alguns instantes e tente analisar novamente." });
       }
 
       res.status(500).json({ error: errorMessage || "Erro interno no servidor." });

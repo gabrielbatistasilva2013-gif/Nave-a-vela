@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, Send, Loader2, AlertTriangle, ShieldCheck, CheckCircle2, X, RefreshCw } from 'lucide-react';
+import { Upload, Send, Loader2, AlertTriangle, ShieldCheck, CheckCircle2, X, RefreshCw, Activity } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { analyzeFakeNews } from '../services/gemini';
 import { cn } from '../lib/utils';
@@ -145,10 +145,10 @@ export default function FakeNewsDetector() {
   
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'false': return <AlertTriangle className="w-5 h-5 text-red-500" />;
-      case 'true': return <CheckCircle2 className="w-5 h-5 text-blue-500" />;
-      case 'maybe': return <ShieldCheck className="w-5 h-5 text-yellow-500" />;
-      default: return <ShieldCheck className="w-5 h-5 text-white" />;
+      case 'false': return <AlertTriangle className="w-8 h-8 text-red-500" />;
+      case 'true': return <CheckCircle2 className="w-8 h-8 text-blue-500" />;
+      case 'maybe': return <ShieldCheck className="w-8 h-8 text-yellow-500" />;
+      default: return <ShieldCheck className="w-8 h-8 text-white" />;
     }
   }
   
@@ -162,20 +162,33 @@ export default function FakeNewsDetector() {
   }
 
   return (
-    <div id="detector" className="w-full max-w-4xl mx-auto flex flex-col items-center">
-      <div className="bg-[#020202] border border-white/10 p-8 md:p-12 rounded-sm w-full shadow-2xl relative">
-        <div className="absolute top-0 right-0 p-4 opacity-20">
-          <ShieldCheck className="w-32 h-32 text-white" strokeWidth={0.5} />
+    <div id="detector" className="w-full max-w-5xl mx-auto flex flex-col items-center relative">
+      
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center -translate-y-10">
+         <div className="w-[800px] h-[800px] absolute opacity-20 border-[1px] border-blue-500/10 rounded-full animate-[spin_60s_linear_infinite] border-dashed"></div>
+         <div className="w-[600px] h-[600px] absolute opacity-10 border-[1px] border-cyan-500/20 rounded-full animate-[spin_40s_linear_infinite_reverse]"></div>
+      </div>
+
+      <div className="bg-[#050505]/40 backdrop-blur-2xl border border-white/[0.08] p-8 md:p-14 rounded-[2rem] w-full relative overflow-hidden group/container shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+        {/* Subtle hover gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] to-cyan-500/[0.03] opacity-0 group-hover/container:opacity-100 transition-opacity duration-1000 pointer-events-none"></div>
+        
+        <div className="absolute -top-10 -right-10 p-8 opacity-[0.02] group-hover/container:opacity-[0.05] transition-opacity duration-1000 pointer-events-none scale-150">
+          <ShieldCheck className="w-64 h-64 text-blue-400" strokeWidth={0.5} />
         </div>
-      <div className="text-left mb-10 relative z-10 border-b border-white/10 pb-8">
+
+      <div className="text-left mb-12 relative z-10 pb-8">
         <div className="flex justify-between items-start">
           <div>
-            <div className="inline-block bg-white text-black px-2 py-1 text-[10px] font-bold uppercase tracking-widest mb-4">Inteligência Artificial</div>
-            <h2 className="text-3xl font-serif text-white mb-3">
+            <div className="inline-block bg-blue-500/10 border border-blue-500/20 text-blue-300 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6 flex items-center gap-2 w-max shadow-[0_0_15px_rgba(59,130,246,0.15)]">
+              <Activity className="w-3 h-3" /> Motor Inteligente
+            </div>
+            <h2 className="text-4xl md:text-5xl font-serif text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
               Testar uma Notícia
             </h2>
-            <p className="text-sm text-slate-400 max-w-xl leading-relaxed">
-              Envie um texto, link ou até 3 imagens suspeitas para a nossa Inteligência Artificial analisar se a notícia tem chances de ser falsa.
+            <p className="text-base text-slate-400 max-w-xl leading-relaxed">
+              Envie um texto, link ou até 3 imagens suspeitas para o nosso sistema analisar se a notícia tem chances de ser falsa.
             </p>
           </div>
         </div>
@@ -188,33 +201,117 @@ export default function FakeNewsDetector() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-20 bg-[#000000]/80 backdrop-blur-sm rounded-sm flex flex-col items-center justify-center overflow-hidden border border-white/10"
+            className="absolute inset-0 z-20 bg-[#020202]/90 backdrop-blur-xl rounded-sm flex flex-col items-center justify-center overflow-hidden border border-white/10"
           >
-            {/* Scanning line */}
+            {/* Radar Background Effect */}
+            <div className="absolute inset-0 bg-[#000000] z-0 overflow-hidden">
+               <div className="absolute inset-0 opacity-[0.1] bg-[radial-gradient(circle_at_50%_50%,#3b82f6_0%,transparent_50%)] animate-pulse"></div>
+               {/* Radar sweep */}
+               <div className="absolute top-1/2 left-1/2 w-[200vw] h-[200vh] -translate-x-1/2 -translate-y-1/2 origin-center animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,rgba(59,130,246,0)_0%,rgba(59,130,246,0.05)_25%,rgba(59,130,246,0.2)_50%,rgba(59,130,246,0)_50%)]"></div>
+            </div>
+             
+            {/* Vertical Scanner Beam */}
             <motion.div
-              className="absolute left-0 right-0 h-[1px] bg-white shadow-[0_0_15px_1px_rgba(255,255,255,0.5)]"
-              animate={{ top: ["0%", "100%", "0%"] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            />
-            {/* Overlay content */}
-            <div className="relative z-10 flex flex-col items-center">
-               <Loader2 className="w-8 h-8 text-white mb-4 animate-spin opacity-80" />
-               <p className="text-white font-mono uppercase tracking-widest text-xs mb-2">Lendo e Analisando</p>
-               <p className="text-slate-400 text-xs text-center max-w-xs font-mono">Procurando sinais de mentiras...</p>
+              className="absolute left-0 right-0 h-[2px] bg-blue-400 shadow-[0_0_30px_5px_rgba(96,165,250,0.6)] z-10"
+              animate={{ top: ["-5%", "105%", "-5%"] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[50px] bg-blue-500/30 blur-2xl"></div>
+            </motion.div>
+            
+            {/* Hex Rain Particles */}
+            <div className="absolute inset-0 flex justify-around overflow-hidden pointer-events-none opacity-30 z-0">
+              {[...Array(15)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="font-mono text-xs text-blue-500 flex flex-col space-y-1"
+                  initial={{ 
+                    y: "-100%",
+                  }}
+                  animate={{ 
+                    y: "150%",
+                  }}
+                  transition={{
+                    duration: 3 + Math.random() * 4,
+                    repeat: Infinity,
+                    delay: Math.random() * 3,
+                    ease: "linear"
+                  }}
+                >
+                  {Array(20).fill(0).map((_, j) => (
+                    <span key={j} className={Math.random() > 0.8 ? "text-cyan-300 font-bold" : ""}>
+                      {Math.random().toString(16).substring(2, 4).toUpperCase()}
+                    </span>
+                  ))}
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Central Terminal Box */}
+            <div className="relative z-20 w-[320px] max-w-[90%] bg-black/80 border border-blue-500/30 p-6 rounded-md shadow-[0_0_50px_rgba(59,130,246,0.1)] flex flex-col items-center backdrop-blur-md">
+               <div className="flex items-center gap-3 w-full mb-6 border-b border-white/5 pb-4">
+                 <div className="flex gap-1.5">
+                   <div className="w-2.5 h-2.5 rounded-full bg-slate-600"></div>
+                   <div className="w-2.5 h-2.5 rounded-full bg-slate-600"></div>
+                   <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div>
+                 </div>
+                 <div className="text-[9px] uppercase tracking-[0.2em] font-mono text-slate-500 ml-auto flex items-center gap-2">
+                   <Activity className="w-3 h-3 text-cyan-500" />
+                   Terminal SEC
+                 </div>
+               </div>
+               
+               <div className="relative mb-6">
+                  <div className="absolute inset-0 border border-cyan-400/50 rounded-full animate-ping opacity-50 duration-1000"></div>
+                  <div className="bg-cyan-500/10 p-4 rounded-full border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                    <ShieldCheck className="w-8 h-8 text-cyan-400 animate-[pulse_1.5s_ease-in-out_infinite]" />
+                  </div>
+               </div>
+               
+               <div className="w-full space-y-3 font-mono text-[10px]">
+                 <motion.div 
+                   animate={{ opacity: [1, 0.5, 1] }} 
+                   transition={{ duration: 1.5, repeat: Infinity }}
+                   className="flex justify-between items-end border-b border-blue-500/20 pb-1"
+                 >
+                   <span className="text-blue-300">IDENTIFICANDO FONTES</span>
+                   <span className="text-slate-500">OK</span>
+                 </motion.div>
+                 <motion.div 
+                   animate={{ opacity: [0.5, 1, 0.5] }} 
+                   transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                   className="flex justify-between items-end border-b border-blue-500/20 pb-1"
+                 >
+                   <span className="text-blue-300">CRUZANDO METADADOS</span>
+                   <span className="text-slate-500 animate-pulse">BUSCANDO...</span>
+                 </motion.div>
+                 <div className="flex items-center gap-2 text-cyan-400 pt-2">
+                   <Loader2 className="w-3 h-3 animate-spin shrink-0" />
+                   <motion.span 
+                     initial={{ width: 0 }}
+                     animate={{ width: "100%" }}
+                     transition={{ duration: 2, repeat: Infinity }}
+                     className="overflow-hidden whitespace-nowrap inline-block"
+                   >
+                     Analisando autenticidade...
+                   </motion.span>
+                 </div>
+               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="flex flex-col gap-6">
+      <form onSubmit={handleSubmit} className="space-y-6 relative z-10 w-full max-w-3xl mx-auto">
+        <div className="flex flex-col gap-8">
           <div className="flex-1 space-y-4">
-            <label className="block text-xs uppercase tracking-widest font-bold text-slate-400">
+            <label className="flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-blue-300/80">
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
               Texto da Notícia ou Link (URL)
             </label>
             <input
               type="url"
-              className="w-full p-4 mb-4 rounded-sm bg-transparent border border-white/20 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors text-sm"
+              className="w-full p-5 mb-4 rounded-xl bg-[#000000]/60 backdrop-blur-sm border border-white/10 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all text-sm shadow-inner"
               placeholder="Cole o link (URL) da matéria ou postagem aqui (opcional)"
               value={text.match(/^https?:\/\/[^\s]+$/) ? text : (text.includes('http') ? text.match(/https?:\/\/[^\s]+/)?.[0] || '' : '')}
               onChange={(e) => {
@@ -226,8 +323,8 @@ export default function FakeNewsDetector() {
               }}
             />
             <textarea
-              className="w-full h-32 p-4 rounded-sm bg-transparent border border-white/20 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors resize-none text-sm"
-              placeholder="Cole o texto que você deseja analisar aqui..."
+              className="w-full h-40 p-5 rounded-xl bg-[#000000]/60 backdrop-blur-sm border border-white/10 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all resize-none text-sm shadow-inner"
+              placeholder="Ou digite/cole o texto que você deseja analisar aqui..."
               value={text.replace(/^https?:\/\/[^\s]+\s*/, '')}
               onChange={(e) => {
                  const urlStr = text.match(/^https?:\/\/[^\s]+/)?.[0] || '';
@@ -236,19 +333,18 @@ export default function FakeNewsDetector() {
             />
           </div>
 
-          <p className="text-[10px] text-slate-500 opacity-80 text-center max-w-sm mx-auto">
-            A Inteligência Artificial pode cometer erros de vez em quando, sempre confirme a notícia.
-          </p>
-          
           <div className="flex-1 space-y-4">
-            <label className="block text-xs uppercase tracking-widest font-bold text-slate-400 flex justify-between">
-              <span>Ou envie Imagens ({files.length}/3)</span>
+            <label className="flex items-center justify-between text-xs uppercase tracking-widest font-bold text-cyan-300/80">
+              <div className="flex items-center gap-2">
+                 <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
+                 Ou envie Imagens ({files.length}/3)
+              </div>
             </label>
             <div
               className={cn(
-                "h-40 relative border border-dashed rounded-sm flex flex-col items-center justify-center transition-colors cursor-pointer group overflow-hidden",
-                previews.length > 0 ? "border-blue-500/30 bg-blue-500/5 p-2" : "border-white/20 bg-transparent hover:border-blue-500/50 hover:bg-white/5",
-                "focus-within:border-blue-500 outline-none"
+                "h-48 relative border border-dashed rounded-xl flex flex-col items-center justify-center transition-all cursor-pointer group overflow-hidden bg-[#000000]/40 backdrop-blur-sm shadow-inner",
+                previews.length > 0 ? "border-blue-500/30 bg-gradient-to-b from-blue-500/5 to-transparent p-3" : "border-white/10 hover:border-cyan-500/50 hover:bg-cyan-500/5",
+                "focus-within:border-cyan-500 focus-within:ring-4 focus-within:ring-cyan-500/10 outline-none"
               )}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
@@ -303,39 +399,40 @@ export default function FakeNewsDetector() {
         </div>
 
         {error && (
-          <div className="p-4 bg-red-900/30 border border-red-800/50 rounded-lg text-red-200 text-sm flex gap-3 items-center">
-            <AlertTriangle className="w-5 h-5 shrink-0" />
-            <p>{error}</p>
-          </div>
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 bg-red-500/10 backdrop-blur-md border border-red-500/30 rounded-xl text-red-200 text-sm flex gap-3 items-center shadow-[0_0_20px_rgba(239,68,68,0.1)]"
+          >
+            <AlertTriangle className="w-5 h-5 shrink-0 text-red-400" />
+            <p>{error.replace(/gemini|inteligência artificial|ia/gi, 'sistema')}</p>
+          </motion.div>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between w-full mt-6 border-t border-white/10 pt-6">
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between w-full mt-8 border-t border-white/[0.05] pt-8">
           <div className="flex items-center gap-4">
             <button
               onClick={() => { setText(''); setFiles([]); setPreviews([]); setResult(null); setError(null); }}
               type="button"
-              className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-sm text-[10px] font-bold uppercase tracking-widest text-slate-300 transition-colors group"
+              className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest text-slate-300 transition-all group"
             >
               <RefreshCw className="w-3 h-3 group-hover:rotate-180 transition-transform duration-500" />
               Limpar tudo
             </button>
-            <div className="text-[10px] text-slate-500 tracking-wider hidden md:block">
-              Verificação Rápida
-            </div>
           </div>
           <button
             type="submit"
             disabled={loading || (!text.trim() && files.length === 0)}
-            className="flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-3 bg-white text-black text-xs font-bold uppercase tracking-widest hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="flex w-full sm:w-auto items-center justify-center gap-2 px-10 py-4 bg-blue-500 text-white shadow-[0_0_20px_rgba(59,130,246,0.3)] text-xs font-bold uppercase tracking-widest rounded-full hover:bg-blue-400 hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95"
           >
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Processando
+                Processando...
               </>
             ) : (
               <>
-                Analisar
+                Iniciar Varredura
               </>
             )}
           </button>
@@ -345,25 +442,30 @@ export default function FakeNewsDetector() {
 
       {result && (
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
           className={cn(
-            "mt-8 p-8 rounded-sm w-full border border-l-4",
+            "mt-8 p-8 md:p-12 rounded-[2rem] w-full border backdrop-blur-3xl shadow-[0_0_50px_rgba(0,0,0,0.3)] relative overflow-hidden",
             getStatusColor(result.status)
           )}
         >
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
-            {getStatusIcon(result.status)}
+          {/* Top glowing accent border */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-current to-transparent opacity-50"></div>
+          
+          <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/10 relative z-10">
+            <div className="p-4 bg-black/30 rounded-2xl backdrop-blur-md border border-white/5">
+              {getStatusIcon(result.status)}
+            </div>
             <div>
-              <h3 className="text-lg font-serif italic mb-1">
-                Relatório de Análise
+              <h3 className="text-2xl font-serif mb-1 text-white">
+                Relatório de Varredura
               </h3>
-              <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">
+              <p className="text-xs font-bold uppercase tracking-widest opacity-80 decoration-2 underline-offset-4">
                 {getStatusText(result.status)}
               </p>
             </div>
           </div>
-          <div className="prose prose-invert prose-blue max-w-none text-sm leading-relaxed overflow-auto markdown-body">
+          <div className="prose prose-invert prose-blue max-w-none text-sm md:text-base leading-relaxed overflow-auto markdown-body relative z-10 text-slate-200">
             <ReactMarkdown>{result.text}</ReactMarkdown>
           </div>
         </motion.div>
