@@ -4,7 +4,7 @@ import { GoogleGenAI } from '@google/genai';
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 
-app.post("/api/analyze", async (req, res) => {
+app.post(["/api/analyze", "/analyze"], async (req, res) => {
   try {
     const apiKey = (process.env.gemini || process.env.GEMINI_API_KEY)?.trim();
     

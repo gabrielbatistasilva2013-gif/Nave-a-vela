@@ -342,7 +342,7 @@ export default function Quiz() {
                  ? "Blindado." 
                  : score >= shuffledQuestions.length / 2 
                    ? "Mente Alerta, Mas Vulnerável." 
-                   : "Cópia Falha. Iscas fisgadas."
+                   : "Defesas Comprometidas. Alta Vulnerabilidade."
              }
           </h2>
           

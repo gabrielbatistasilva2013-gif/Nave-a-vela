@@ -79,7 +79,7 @@ export default function App() {
             {activeTab === 'home' && (
               <span className="absolute inset-0 rounded-full animate-pulse bg-cyan-400/20 shadow-[0_0_15px_rgba(34,211,238,0.6)] mix-blend-screen pointer-events-none"></span>
             )}
-            <Globe className={`w-5 h-5 shrink-0 transition-colors z-10 relative ${activeTab === 'home' ? 'text-cyan-300' : 'group-hover:text-cyan-400'}`} />
+            <Globe className={`w-5 h-5 shrink-0 transition-colors z-10 relative ${activeTab === 'home' ? 'text-cyan-300' : 'text-cyan-500 group-hover:text-cyan-400'}`} />
             <span className={`overflow-hidden transition-all duration-500 whitespace-nowrap z-10 relative max-md:hidden ${showNavText ? 'max-w-[100px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}`}>Início</span>
           </button>
           
@@ -479,7 +479,7 @@ export default function App() {
         </section>
 
         {/* --- EXTRA: O FUTURO DA DESINFORMAÇÃO --- */}
-        <section id="deepfakes" className="w-full py-32 px-6 bg-[#000000] border-t border-t-white/10 relative overflow-hidden">
+        <section id="deepfakes" className="w-full pt-32 pb-12 px-6 bg-[#000000] border-t border-t-white/10 relative overflow-hidden">
            {/* Fundo dinâmico com padrão */}
            <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
            <motion.div 
@@ -490,12 +490,29 @@ export default function App() {
              className="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row gap-16 items-center"
            >
              <div className="flex-1 w-full relative">
-                <div className="aspect-square bg-slate-900 border border-white/10 rounded-sm overflow-hidden relative group">
+                <div className="aspect-square bg-slate-900 border border-white/10 rounded-sm overflow-hidden relative group mb-6">
                   <div className="absolute inset-0 bg-blue-500/20 mix-blend-overlay z-10 animate-pulse"></div>
                   <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=600" className="w-full h-full object-cover grayscale transition-transform duration-[2s] group-hover:scale-110" alt="IA e Deepfakes" />
                   <div className="absolute top-4 left-4 right-4 bg-black/80 backdrop-blur-sm border border-white/10 text-white text-[10px] font-mono p-3 uppercase tracking-widest flex items-center gap-3">
                     <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
                     Sintetizando Rosto 3D...
+                  </div>
+                </div>
+                
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col items-center text-center gap-3 p-4 border border-white/5 rounded-sm bg-white/[0.02]">
+                     <span className="text-blue-500"><AlertTriangle className="w-5 h-5"/></span>
+                     <div className="text-sm text-slate-300 font-medium">
+                       <strong className="block text-white mb-1">Combate à Bots e Contas Falsas</strong>
+                       Como identificar e neutralizar perfis automatizados (bots) e contas falsas que amplificam desinformação nas redes sociais.
+                     </div>
+                  </div>
+                  <div className="flex flex-col items-center text-center gap-3 p-4 border border-white/5 rounded-sm bg-white/[0.02]">
+                     <span className="text-purple-500"><ShieldCheck className="w-5 h-5"/></span>
+                     <div className="text-sm text-slate-300 font-medium">
+                       <strong className="block text-white mb-1">Promoção de Fontes Confiáveis</strong>
+                       Como facilitar o acesso a informações verificadas, jornalismo de qualidade e conhecimento científico confiável.
+                     </div>
                   </div>
                 </div>
              </div>
@@ -524,6 +541,13 @@ export default function App() {
                     <div>
                       <strong className="block text-white mb-1">Fantoches Políticos</strong>
                       Candidatos adversários sendo recriados em vídeos de alta definição cometendo infrações, manipulando eleições diretamente.
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-4 p-4 border border-white/5 rounded-sm bg-white/[0.02]">
+                    <span className="text-blue-500 mt-1"><Brain className="w-5 h-5"/></span>
+                    <div>
+                      <strong className="block text-white mb-1">Detecção de Manipulação Audiovisual</strong>
+                      Saber identificar deepfakes, imagens alteradas, áudios manipulados e vídeos editados de forma enganosa.
                     </div>
                   </li>
                 </ul>
