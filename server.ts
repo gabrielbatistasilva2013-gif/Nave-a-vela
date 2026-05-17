@@ -25,8 +25,13 @@ async function startServer() {
       const urlRegex = /(https?:\/\/[^\s]+)/g;
       const hasUrls = text && text.match(urlRegex);
       
-      const prompt = `Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet.
-Data atual para análise: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}.
+      const currentDateStr = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+      const currentYear = new Date().getFullYear();
+
+      const prompt = `ATENÇÃO: O ANO ATUAL É EXATAMENTE ${currentYear}. A data e hora de hoje é ${currentDateStr}. VOCÊ NÃO ESTÁ NO ANO DE 2024. QUALQUER NOTÍCIA DO ANO ${currentYear} É DE HOJE, E NÃO DO FUTURO.
+
+Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet.
+Data atual para análise: ${currentDateStr}.
 OBRIGATÓRIO: Faça uma pesquisa na web (Google Search) para verificar o que ocorreu recentemente, principalmente notícias novas até o dia de hoje. Se o texto contiver uma URL, utilize a internet para investigá-la.
 
 Analise a seguinte informação (texto e/ou imagens). Se houver múltiplas imagens, faça um comparativo detalhado entre elas, apontando inconsistências ou correlações.
@@ -67,7 +72,7 @@ Após a tag, forneça o relatório detalhado em português com links reais das f
             model: 'gemini-3-flash-preview',
             contents: contents,
             config: {
-              systemInstruction: `Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet. Analise os fatos com bastante atenção. Data e hora atual: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}. Use a internet para verificar notícias recentes e contextos atuais.`,
+              systemInstruction: `ATENÇÃO CONTÍNUA: O ano atual é EXATAMENTE ${currentYear}. A data é ${currentDateStr}. VOCÊ ESTÁ NO ANO DE ${currentYear}, NÃO EM 2024. Leve isso extremamente a sério ao avaliar se as datas dos eventos, notícias ou URLs (como 2026/05/17) são reais ou "do futuro". Elas não são do futuro, são de agora. Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet. Analise os fatos com bastante atenção. Use a sua ferramenta de googleSearch para verificar e fundamentar sua resposta.`,
               tools: [{ googleSearch: {} }]
             }
           });
