@@ -82,10 +82,13 @@ Após a tag, forneça o relatório detalhado em português com links reais das f
           if (errMsg.includes("503") || errMsg.includes("UNAVAILABLE") || errMsg.includes("429")) {
             attempt++;
             if (attempt >= MAX_RETRIES) {
+              if (errMsg.includes("429")) {
+                throw new Error("Quota Exceeded ou Rate Limit atingido do Gemini.");
+              }
               throw err;
             }
             // Wait before retrying (exponential backoff)
-            await new Promise(resolve => setTimeout(resolve, 1500 * attempt));
+            await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
           } else {
             throw err;
           }
@@ -101,8 +104,12 @@ Após a tag, forneça o relatório detalhado em português com links reais das f
           return res.status(500).json({ error: "A chave de configuração atual é inválida. Verifique as configurações de sistema." });
       }
 
-      if (errorMessage.includes("500") || errorMessage.includes("UNAVAILABLE") || errorMessage.includes("503") || errorMessage.includes("429")) {
-          return res.status(503).json({ error: "O sistema está muito sobrecarregado no momento e não consegue responder agora. Espere alguns instantes e tente analisar novamente." });
+      if (errorMessage.includes("Quota Exceeded") || errorMessage.includes("Rate Limit") || errorMessage.includes("429")) {
+          return res.status(429).json({ error: "Limite de taxa atingido (muitas buscas simultâneas ou cota excedida). Aguarde alguns instantes antes de tentar analisar novamente." });
+      }
+
+      if (errorMessage.includes("500") || errorMessage.includes("UNAVAILABLE") || errorMessage.includes("503")) {
+          return res.status(503).json({ error: "O sistema de IA está indisponível no momento. Espere alguns instantes e tente novamente." });
       }
 
       res.status(500).json({ error: errorMessage || "Erro interno no servidor." });
