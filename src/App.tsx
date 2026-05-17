@@ -190,7 +190,7 @@ export default function App() {
                 transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="mt-8 text-slate-300 max-w-2xl text-lg md:text-xl leading-relaxed font-light relative z-10 drop-shadow-md mx-auto"
               >
-                A desinformação se espalha mais rápido que a verdade. Uma plataforma de código aberto para identificar, verificar e deter conteúdos falsos na era da pós-verdade.
+                Em uma era onde a desinformação viaja mais rápido que a luz, o pensamento crítico é nossa melhor defesa. Prepare sua mente, identifique armadilhas digitais e não deixe que manipulem sua visão de mundo.
               </motion.p>
               
               <motion.div 
