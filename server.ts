@@ -73,7 +73,7 @@ Após a tag, forneça o relatório detalhado em português com links reais das f
           const currentYearExact = new Date().getFullYear();
 
           response = await ai.models.generateContent({
-            model: 'gemini-2.5-pro',
+            model: 'gemini-2.5-flash',
             contents: contents,
             config: {
               systemInstruction: `ATENÇÃO CONTÍNUA: O ano atual é EXATAMENTE ${currentYearExact}. A data e hora exatas de AGORA (quando a pergunta foi feita) são: ${currentDateExact}. VOCÊ ESTÁ NO ANO DE ${currentYearExact}, NÃO EM QUALQUER OUTRO ANO ANTERIOR. Leve isso extremamente a sério ao avaliar se as datas dos eventos, notícias ou URLs são reais ou "do futuro". Elas não são do futuro, são informações atuais refletindo a data e hora em que a pessoa fez a pergunta. Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet. Analise os fatos com bastante atenção. Use a sua ferramenta de googleSearch (pesquisa na web) EXAUSTIVAMENTE para verificar e fundamentar sua resposta.`,
