@@ -35,7 +35,6 @@ export async function analyzeFakeNews(text: string, images: { base64: string, mi
     }
     return data.analysis;
   } catch (error: any) {
-    console.error('Error analyzing content:', error);
     throw new Error(error.message || 'Erro ao comunicar com o servidor de análise.');
   }
 }

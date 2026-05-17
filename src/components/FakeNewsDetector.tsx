@@ -395,7 +395,7 @@ export default function FakeNewsDetector() {
             className="p-4 bg-red-500/10 backdrop-blur-md border border-red-500/30 rounded-xl text-red-200 text-sm flex gap-3 items-center shadow-[0_0_20px_rgba(239,68,68,0.1)]"
           >
             <AlertTriangle className="w-5 h-5 shrink-0 text-red-400" />
-            <p>{error.replace(/\b(gemini|inteligência artificial|ia)\b/gi, 'sistema')}</p>
+            <p>{error.replace(/gemini|inteligência artificial/gi, 'sistema')}</p>
           </motion.div>
         )}
 

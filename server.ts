@@ -101,8 +101,6 @@ Após a tag, forneça o relatório detalhado em português com links reais das f
 
       res.json({ analysis: response?.text || "Análise concluída, porém sem texto de resposta." });
     } catch (error: any) {
-      console.error("Error evaluating:", error);
-      
       const errorMessage = error.message || "";
       if (errorMessage.includes("API key not valid") || errorMessage.includes("API_KEY_INVALID")) {
           return res.status(500).json({ error: "A chave de configuração atual é inválida. Verifique as configurações de sistema." });

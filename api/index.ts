@@ -93,8 +93,6 @@ Após a tag, forneça o relatório detalhado em português com links reais das f
 
     res.json({ analysis: response?.text || "Análise concluída, porém sem texto de resposta." });
   } catch (error: any) {
-    console.error("Error evaluating with Gemini:", error);
-    
     const errorMessage = error.message || "";
     if (errorMessage.includes("API key not valid") || errorMessage.includes("API_KEY_INVALID")) {
         const rawKey = process.env.gemini || process.env.GEMINI_API_KEY || "";
