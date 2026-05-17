@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
-import { Brain, Settings2, Play, RefreshCw, Layers, Loader2 } from 'lucide-react';
+import { Brain, Settings2, Play, RefreshCw, Layers, Loader2, CheckSquare, XCircle } from 'lucide-react';
 
 type Question = {
   id: number;
