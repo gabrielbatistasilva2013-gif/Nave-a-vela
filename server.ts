@@ -64,7 +64,8 @@ Após a tag, forneça o relatório detalhado em português com fontes ou referê
             model: 'gemini-2.5-flash',
             contents: contents,
             config: {
-              systemInstruction: "Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet. Analise os fatos com bastante atenção.",
+              systemInstruction: `Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet. Analise os fatos com bastante atenção. Data e hora atual: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}. Use a internet para verificar notícias recentes e contextos atuais.`,
+              tools: [{ googleSearch: {} }]
             }
           });
           break; // success

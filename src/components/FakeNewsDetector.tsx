@@ -174,7 +174,7 @@ export default function FakeNewsDetector() {
         {/* Subtle hover gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] to-cyan-500/[0.03] opacity-0 group-hover/container:opacity-100 transition-opacity duration-1000 pointer-events-none"></div>
         
-        <div className="absolute -top-10 -right-10 p-8 opacity-[0.02] group-hover/container:opacity-[0.05] transition-opacity duration-1000 pointer-events-none scale-150">
+        <div className="absolute top-0 right-10 p-8 opacity-[0.02] group-hover/container:opacity-[0.05] transition-opacity duration-1000 pointer-events-none scale-125">
           <ShieldCheck className="w-64 h-64 text-blue-400" strokeWidth={0.5} />
         </div>
 
