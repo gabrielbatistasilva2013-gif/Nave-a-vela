@@ -15,19 +15,28 @@ app.post(["/api/analyze", "/analyze"], async (req, res) => {
     const ai = new GoogleGenAI({ apiKey });
     const { text, images } = req.body;
 
+    // Extract URLs from text if present to help the instruction
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const hasUrls = text && text.match(urlRegex);
     
-    const prompt = `Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet com forte conhecimento sobre notícias.
+    const currentDateStr = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+    const currentYear = new Date().getFullYear();
+
+    const prompt = `ATENÇÃO: O ANO ATUAL É EXATAMENTE ${currentYear}. A data e hora de hoje é ${currentDateStr}. VOCÊ NÃO ESTÁ NO ANO DE 2024. QUALQUER NOTÍCIA DO ANO ${currentYear} É DE HOJE, E NÃO DO FUTURO.
+
+Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet.
+Data atual para análise: ${currentDateStr}.
+OBRIGATÓRIO: Faça uma pesquisa na web (Google Search) para verificar o que ocorreu recentemente, principalmente notícias novas até o dia de hoje. Se o texto contiver uma URL, utilize a internet para investigá-la.
+
 Analise a seguinte informação (texto e/ou imagens). Se houver múltiplas imagens, faça um comparativo detalhado entre elas, apontando inconsistências ou correlações.
-Determine a probabilidade de ser Fake News usando seu conhecimento.
-Explique o seu raciocínio de forma clara e profissional, apontando sinais de alerta (sensacionalismo, falta de fontes, manipulação de imagens, etc.).
+Determine a probabilidade de ser Fake News usando seu conhecimento atualizado pela web.
+Explique o seu raciocínio de forma clara e profissional, citando as notícias reais e fontes confiáveis de sua pesquisa de hoje.
 No início da sua resposta, adicione uma das seguintes tags exatas na primeira linha (sozinha), dependendo da sua conclusão:
 [FALSO] - Se tiver alta chance de ser Fake News ou manipulação (ou se foi comprovado ser falso).
-[VERDADEIRO] - Se comprovado como autêntico e confiável com base em sites seguros de checagem.
+[VERDADEIRO] - Se comprovado como autêntico e confiável hoje.
 [INCONCLUSIVO] - Se requer mais análise detalhada ou não há embasamento suficiente.
 
-Após a tag, forneça o relatório detalhado em português com fontes ou referências em que você se baseia.`;
+Após a tag, forneça o relatório detalhado em português com links reais das fontes pesquisadas.`;
 
     const contents: any[] = [];
     
@@ -53,11 +62,15 @@ Após a tag, forneça o relatório detalhado em português com fontes ou referê
 
     while (attempt < MAX_RETRIES) {
       try {
+        const currentDateExact = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+        const currentYearExact = new Date().getFullYear();
+
         response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: contents,
           config: {
-            systemInstruction: "Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet. Analise os fatos com bastante atenção.",
+            systemInstruction: `ATENÇÃO CONTÍNUA: O ano atual é EXATAMENTE ${currentYearExact}. A data e hora exatas de AGORA (quando a pergunta foi feita) são: ${currentDateExact}. VOCÊ ESTÁ NO ANO DE ${currentYearExact}, NÃO EM QUALQUER OUTRO ANO ANTERIOR. Leve isso extremamente a sério ao avaliar se as datas dos eventos, notícias ou URLs são reais ou "do futuro". Elas não são do futuro, são informações atuais refletindo a data e hora em que a pessoa fez a pergunta. Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet. Analise os fatos com bastante atenção. Use a sua ferramenta de googleSearch (pesquisa na web) EXAUSTIVAMENTE para verificar e fundamentar sua resposta.`,
+            tools: [{ googleSearch: {} }]
           }
         });
         break; 
@@ -66,9 +79,12 @@ Após a tag, forneça o relatório detalhado em português com fontes ou referê
         if (errMsg.includes("503") || errMsg.includes("UNAVAILABLE") || errMsg.includes("429")) {
           attempt++;
           if (attempt >= MAX_RETRIES) {
+            if (errMsg.includes("429")) {
+              throw new Error("Quota Exceeded ou Rate Limit atingido do Gemini.");
+            }
             throw err;
           }
-          await new Promise(resolve => setTimeout(resolve, 1500 * attempt));
+          await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
         } else {
           throw err;
         }
@@ -89,8 +105,12 @@ Após a tag, forneça o relatório detalhado em português com fontes ou referê
         return res.status(500).json({ error: `A chave da API do Gemini informada é inválida ${keyInfo}. Acesse Menu -> Settings -> Secrets e certifique-se de que a secret 'gemini' (ou GEMINI_API_KEY) contém uma chave válida que começa com 'AIzaSy'.` });
     }
 
-    if (errorMessage.includes("500") || errorMessage.includes("UNAVAILABLE") || errorMessage.includes("503") || errorMessage.includes("429")) {
-        return res.status(503).json({ error: "O modelo (Gemini) está muito sobrecarregado no momento e não consegue responder agora. Espere alguns instantes e tente analisar novamente." });
+    if (errorMessage.includes("Quota Exceeded") || errorMessage.includes("Rate Limit") || errorMessage.includes("429")) {
+        return res.status(429).json({ error: "Limite de taxa atingido (muitas buscas simultâneas ou cota excedida). Aguarde alguns instantes antes de tentar analisar novamente." });
+    }
+
+    if (errorMessage.includes("500") || errorMessage.includes("UNAVAILABLE") || errorMessage.includes("503")) {
+        return res.status(503).json({ error: "O sistema de IA está indisponível no momento. Espere alguns instantes e tente novamente." });
     }
 
     res.status(500).json({ error: errorMessage || "Erro interno no servidor." });
