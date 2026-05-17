@@ -161,6 +161,31 @@ export default function FakeNewsDetector() {
     }
   }
 
+  const loadingMessages = [
+    "Iniciando varredura profunda...",
+    "Coletando metadados e rastros digitais...",
+    "Acessando bancos de dados em tempo real...",
+    "Cruzando informações com fontes confiáveis...",
+    "Analisando contexto de publicações...",
+    "Identificando padrões de desinformação...",
+    "Checando fontes e datas da publicação...",
+    "Finalizando análise de autenticidade..."
+  ];
+
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+
+  React.useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (loading) {
+      interval = setInterval(() => {
+        setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+      }, 2500);
+    } else {
+      setLoadingMessageIndex(0);
+    }
+    return () => clearInterval(interval);
+  }, [loading, loadingMessages.length]);
+
   return (
     <div id="detector" className="w-full max-w-5xl mx-auto flex flex-col items-center relative">
       
@@ -174,7 +199,7 @@ export default function FakeNewsDetector() {
         {/* Subtle hover gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] to-cyan-500/[0.03] opacity-0 group-hover/container:opacity-100 transition-opacity duration-1000 pointer-events-none"></div>
         
-        <div className="absolute top-0 right-10 p-8 opacity-[0.02] group-hover/container:opacity-[0.05] transition-opacity duration-1000 pointer-events-none scale-125">
+        <div className="absolute top-4 right-16 p-8 opacity-[0.02] group-hover/container:opacity-[0.05] transition-opacity duration-1000 pointer-events-none scale-125">
           <ShieldCheck className="w-64 h-64 text-blue-400" strokeWidth={0.5} />
         </div>
 
@@ -201,101 +226,63 @@ export default function FakeNewsDetector() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-20 bg-[#020202]/90 backdrop-blur-xl rounded-sm flex flex-col items-center justify-center overflow-hidden border border-white/10"
+            className="absolute inset-0 z-20 bg-[#020202]/90 backdrop-blur-md rounded-[1.5rem] flex flex-col items-center justify-center overflow-hidden border border-blue-500/20"
           >
-            {/* Radar Background Effect */}
+            {/* Simple Background Effect */}
             <div className="absolute inset-0 bg-[#000000] z-0 overflow-hidden">
-               <div className="absolute inset-0 opacity-[0.1] bg-[radial-gradient(circle_at_50%_50%,#3b82f6_0%,transparent_50%)] animate-pulse"></div>
-               {/* Radar sweep */}
-               <div className="absolute top-1/2 left-1/2 w-[200vw] h-[200vh] -translate-x-1/2 -translate-y-1/2 origin-center animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,rgba(59,130,246,0)_0%,rgba(59,130,246,0.05)_25%,rgba(59,130,246,0.2)_50%,rgba(59,130,246,0)_50%)]"></div>
+               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-blue-500/10 blur-[100px] rounded-full animate-pulse"></div>
             </div>
              
-            {/* Vertical Scanner Beam */}
+            {/* Vertical Scanner Beam (Simplified) */}
             <motion.div
-              className="absolute left-0 right-0 h-[2px] bg-blue-400 shadow-[0_0_30px_5px_rgba(96,165,250,0.6)] z-10"
-              animate={{ top: ["-5%", "105%", "-5%"] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            >
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[50px] bg-blue-500/30 blur-2xl"></div>
-            </motion.div>
+              className="absolute left-0 right-0 h-[1px] bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)] z-10 opacity-50"
+              animate={{ top: ["0%", "100%", "0%"] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            />
             
-            {/* Hex Rain Particles */}
-            <div className="absolute inset-0 flex justify-around overflow-hidden pointer-events-none opacity-30 z-0">
-              {[...Array(15)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="font-mono text-xs text-blue-500 flex flex-col space-y-1"
-                  initial={{ 
-                    y: "-100%",
-                  }}
-                  animate={{ 
-                    y: "150%",
-                  }}
-                  transition={{
-                    duration: 3 + Math.random() * 4,
-                    repeat: Infinity,
-                    delay: Math.random() * 3,
-                    ease: "linear"
-                  }}
-                >
-                  {Array(20).fill(0).map((_, j) => (
-                    <span key={j} className={Math.random() > 0.8 ? "text-cyan-300 font-bold" : ""}>
-                      {Math.random().toString(16).substring(2, 4).toUpperCase()}
-                    </span>
-                  ))}
-                </motion.div>
-              ))}
-            </div>
-
             {/* Central Terminal Box */}
-            <div className="relative z-20 w-[320px] max-w-[90%] bg-black/80 border border-blue-500/30 p-6 rounded-md shadow-[0_0_50px_rgba(59,130,246,0.1)] flex flex-col items-center backdrop-blur-md">
-               <div className="flex items-center gap-3 w-full mb-6 border-b border-white/5 pb-4">
+            <div className="relative z-20 w-[400px] max-w-[90%] bg-black/60 border border-blue-500/30 p-8 rounded-2xl shadow-[0_0_40px_rgba(59,130,246,0.15)] flex flex-col items-center backdrop-blur-lg">
+               <div className="flex items-center gap-3 w-full mb-8 border-b border-white/5 pb-4">
                  <div className="flex gap-1.5">
                    <div className="w-2.5 h-2.5 rounded-full bg-slate-600"></div>
                    <div className="w-2.5 h-2.5 rounded-full bg-slate-600"></div>
-                   <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div>
+                   <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-[ping_2s_infinite]"></div>
                  </div>
                  <div className="text-[9px] uppercase tracking-[0.2em] font-mono text-slate-500 ml-auto flex items-center gap-2">
-                   <Activity className="w-3 h-3 text-cyan-500" />
-                   Terminal SEC
+                   <Activity className="w-3 h-3 text-blue-500" />
+                   Análise em andamento
                  </div>
                </div>
                
-               <div className="relative mb-6">
-                  <div className="absolute inset-0 border border-cyan-400/50 rounded-full animate-ping opacity-50 duration-1000"></div>
-                  <div className="bg-cyan-500/10 p-4 rounded-full border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-                    <ShieldCheck className="w-8 h-8 text-cyan-400 animate-[pulse_1.5s_ease-in-out_infinite]" />
+               <div className="relative mb-8">
+                  <div className="absolute inset-0 border border-blue-400/30 rounded-full animate-ping opacity-50 duration-1000"></div>
+                  <div className="bg-blue-500/10 p-5 rounded-full border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+                    <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
                   </div>
                </div>
                
-               <div className="w-full space-y-3 font-mono text-[10px]">
-                 <motion.div 
-                   animate={{ opacity: [1, 0.5, 1] }} 
-                   transition={{ duration: 1.5, repeat: Infinity }}
-                   className="flex justify-between items-end border-b border-blue-500/20 pb-1"
-                 >
-                   <span className="text-blue-300">IDENTIFICANDO FONTES</span>
-                   <span className="text-slate-500">OK</span>
-                 </motion.div>
-                 <motion.div 
-                   animate={{ opacity: [0.5, 1, 0.5] }} 
-                   transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                   className="flex justify-between items-end border-b border-blue-500/20 pb-1"
-                 >
-                   <span className="text-blue-300">CRUZANDO METADADOS</span>
-                   <span className="text-slate-500 animate-pulse">BUSCANDO...</span>
-                 </motion.div>
-                 <div className="flex items-center gap-2 text-cyan-400 pt-2">
-                   <Loader2 className="w-3 h-3 animate-spin shrink-0" />
-                   <motion.span 
-                     initial={{ width: 0 }}
-                     animate={{ width: "100%" }}
-                     transition={{ duration: 2, repeat: Infinity }}
-                     className="overflow-hidden whitespace-nowrap inline-block"
+               <div className="w-full text-center h-8 flex flex-col justify-center">
+                 <AnimatePresence mode="wait">
+                   <motion.div
+                     key={loadingMessageIndex}
+                     initial={{ opacity: 0, y: 10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     exit={{ opacity: 0, y: -10 }}
+                     transition={{ duration: 0.3 }}
+                     className="text-xs md:text-sm text-blue-300 font-mono tracking-wider font-medium"
                    >
-                     Analisando autenticidade...
-                   </motion.span>
-                 </div>
+                     {loadingMessages[loadingMessageIndex]}
+                   </motion.div>
+                 </AnimatePresence>
+               </div>
+               
+               <div className="w-full mt-6 bg-white/5 h-1 rounded-full overflow-hidden">
+                 <motion.div 
+                   className="h-full bg-gradient-to-r from-blue-600 to-cyan-400"
+                   initial={{ width: "0%" }}
+                   animate={{ width: "100%" }}
+                   transition={{ duration: 15, ease: "linear" }}
+                 />
                </div>
             </div>
           </motion.div>
