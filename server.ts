@@ -68,11 +68,15 @@ Após a tag, forneça o relatório detalhado em português com links reais das f
 
       while (attempt < MAX_RETRIES) {
         try {
+          // Obtemos a data/hora exata no momento em que a requisição é feita
+          const currentDateExact = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+          const currentYearExact = new Date().getFullYear();
+
           response = await ai.models.generateContent({
-            model: 'gemini-3-flash-preview',
+            model: 'gemini-2.5-pro',
             contents: contents,
             config: {
-              systemInstruction: `ATENÇÃO CONTÍNUA: O ano atual é EXATAMENTE ${currentYear}. A data é ${currentDateStr}. VOCÊ ESTÁ NO ANO DE ${currentYear}, NÃO EM 2024. Leve isso extremamente a sério ao avaliar se as datas dos eventos, notícias ou URLs (como 2026/05/17) são reais ou "do futuro". Elas não são do futuro, são de agora. Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet. Analise os fatos com bastante atenção. Use a sua ferramenta de googleSearch para verificar e fundamentar sua resposta.`,
+              systemInstruction: `ATENÇÃO CONTÍNUA: O ano atual é EXATAMENTE ${currentYearExact}. A data e hora exatas de AGORA (quando a pergunta foi feita) são: ${currentDateExact}. VOCÊ ESTÁ NO ANO DE ${currentYearExact}, NÃO EM QUALQUER OUTRO ANO ANTERIOR. Leve isso extremamente a sério ao avaliar se as datas dos eventos, notícias ou URLs são reais ou "do futuro". Elas não são do futuro, são informações atuais refletindo a data e hora em que a pessoa fez a pergunta. Você é um especialista em checagem de fatos e jornalismo investigativo ligado à internet. Analise os fatos com bastante atenção. Use a sua ferramenta de googleSearch (pesquisa na web) EXAUSTIVAMENTE para verificar e fundamentar sua resposta.`,
               tools: [{ googleSearch: {} }]
             }
           });
