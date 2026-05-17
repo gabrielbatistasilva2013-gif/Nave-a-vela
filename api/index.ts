@@ -106,7 +106,7 @@ Após a tag, forneça o relatório detalhado em português com links reais das f
     }
 
     if (errorMessage.includes("Quota Exceeded") || errorMessage.includes("Rate Limit") || errorMessage.includes("429")) {
-        return res.status(429).json({ error: "Limite de taxa atingido (muitas buscas simultâneas ou cota excedida). Aguarde alguns instantes antes de tentar analisar novamente." });
+        return res.status(429).json({ error: "Muitas pessoas estão enviando notícias ao mesmo tempo, aguarde de 1 a 2 minutos para tentar novamente. É indicado atualizar a página ou apertar F5." });
     }
 
     if (errorMessage.includes("500") || errorMessage.includes("UNAVAILABLE") || errorMessage.includes("503")) {
