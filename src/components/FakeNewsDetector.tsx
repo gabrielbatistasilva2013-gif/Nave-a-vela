@@ -239,6 +239,9 @@ export default function FakeNewsDetector() {
               animate={{ top: ["0%", "100%", "0%"] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
             />
+
+            {/* Hex Rain Particles (Optimized) */}
+            <HexRain />
             
             {/* Central Terminal Box */}
             <div className="relative z-20 w-[400px] max-w-[90%] bg-black/60 border border-blue-500/30 p-8 rounded-2xl shadow-[0_0_40px_rgba(59,130,246,0.15)] flex flex-col items-center backdrop-blur-lg">
@@ -459,5 +462,58 @@ export default function FakeNewsDetector() {
       )}
       </div>
     </div>
+  );
+}
+
+function HexRain() {
+  const particles = React.useMemo(() => {
+    return [...Array(15)].map((_, i) => {
+      const duration = 3 + Math.random() * 4;
+      const delay = Math.random() * 3;
+      return {
+        key: i,
+        duration,
+        delay,
+        chars: [...Array(20)].map(() => ({
+          isCyan: Math.random() > 0.8,
+          char: Math.random().toString(16).substring(2, 4).toUpperCase()
+        }))
+      }
+    });
+  }, []);
+
+  return (
+    <>
+      <style>{`
+        @keyframes hexRain {
+          0% { transform: translateY(-100vh); opacity: 0; }
+          10% { opacity: 0.4; }
+          90% { opacity: 0.4; }
+          100% { transform: translateY(100vh); opacity: 0; }
+        }
+        .hex-particle {
+          animation: hexRain linear infinite;
+          will-change: transform;
+        }
+      `}</style>
+      <div className="absolute inset-0 flex justify-around overflow-hidden pointer-events-none z-0">
+        {particles.map(({ key, duration, delay, chars }) => (
+          <div
+            key={key}
+            className="font-mono text-xs text-blue-500 flex flex-col space-y-1 hex-particle"
+            style={{
+              animationDuration: `${duration}s`,
+              animationDelay: `${delay}s`
+            }}
+          >
+            {chars.map((c, j) => (
+              <span key={j} className={c.isCyan ? "text-cyan-300 font-bold" : ""}>
+                {c.char}
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
